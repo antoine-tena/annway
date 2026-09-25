@@ -1,9 +1,14 @@
 # Veille des dépendances : une PR groupée par semaine et par écosystème.
-# Au premier build.gradle(.kts) ou pom.xml, ajouter ici l'écosystème correspondant
-# (package-ecosystem: gradle ou maven, directory: /) : Dependabot échoue s'il ne trouve
-# aucun fichier à surveiller, d'où son absence tant que le projet est vide.
 version: 2
 updates:
+  - package-ecosystem: gradle
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      gradle:
+        patterns: ["*"]
+
   - package-ecosystem: github-actions
     directory: /
     schedule:

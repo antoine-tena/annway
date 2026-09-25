@@ -10,9 +10,8 @@
       "Bash(./gradlew build:*)",
       "Bash(./gradlew test:*)",
       "Bash(./gradlew check:*)",
-      "Bash(./mvnw verify:*)",
-      "Bash(./mvnw test:*)",
-      "Bash(python3 scripts/ci/check_rules.py)"
+      "Bash(python3 scripts/ci/check_rules.py)",
+      "Bash(./gradlew bootRun:*)"
     ],
     "deny": [
       "Read(./.env)",

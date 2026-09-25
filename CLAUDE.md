@@ -8,9 +8,15 @@ supposer qu'annski est présent sur la machine.
 ## Stack
 
 - **Tout le projet est en Java** : Java 25 (LTS), aucun autre langage applicatif.
-- Build par **wrapper** commité (`./gradlew` ou `./mvnw`) : jamais un Gradle ou un Maven installé
-  sur la machine. Le framework n'est pas encore choisi ; le décrire ici quand il le sera, avec les
-  commandes pour lancer, tester et vérifier le code.
+- **Spring Boot 4.1** (Spring MVC, Bean Validation, Actuator), paquet racine `fr.annway`.
+- **Gradle 9.7** en Kotlin DSL (`build.gradle.kts`), toujours par le wrapper `./gradlew`, jamais
+  un Gradle installé sur la machine. La distribution est vérifiée par sa somme SHA-256.
+- Commandes :
+  - lancer : `./gradlew bootRun` (http://localhost:8080, santé sur `/actuator/health`) ;
+  - tester : `./gradlew test` ;
+  - tout vérifier comme la CI : `./gradlew build`.
+- Un paquet par domaine (`fr.annway.trips`, `fr.annway.bookings`…), avec dedans ses couches
+  `controller`, `service`, `repository` ([COUCHES]).
 - CI : `.github/workflows/ci.yml` (règles, secrets, build et tests). Déploiement :
   `.github/workflows/deploy.yml`, lancé à la main depuis `main`.
 

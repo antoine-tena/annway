@@ -4,8 +4,15 @@ Covoiturage pour les sorties annski : proposer un trajet vers la station, réser
 
 ## Prérequis
 
-- JDK 25 (Temurin recommandé). Gradle ou Maven n'ont pas à être installés : le projet utilise
-  son wrapper (`./gradlew` ou `./mvnw`).
+- JDK 25 (Temurin recommandé). Gradle n'a pas à être installé : le projet utilise son wrapper.
+
+## Lancer
+
+```sh
+./gradlew bootRun   # http://localhost:8080, santé sur /actuator/health
+./gradlew test      # tests
+./gradlew build     # tout vérifier, comme la CI
+```
 
 ## Contribuer
 
