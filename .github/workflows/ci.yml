@@ -1,0 +1,83 @@
+name: Code Quality Assurance
+
+# Même découpage que la CI d'annski, pour un projet entièrement en Java. Tant qu'aucun wrapper
+# (gradlew ou mvnw) n'est commité, le job java saute ses étapes et la CI reste verte ; les
+# règles du CLAUDE.md et la recherche de secrets tournent dès maintenant.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  charter-compliance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Vérifier la conformité au CLAUDE.md
+        run: python3 scripts/ci/check_rules.py
+
+  secrets-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      # [SECRETS] : tout l'historique est fouillé, pas seulement le dernier commit.
+      - name: Rechercher des secrets (gitleaks)
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  java-quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Projet Java absent
+        if: hashFiles('gradlew', 'mvnw') == ''
+        run: |
+          echo "Pas encore de gradlew ni de mvnw : rien à construire." >> "$GITHUB_STEP_SUMMARY"
+
+      # [DEPENDANCES-FIGEES] : un gradle-wrapper.jar modifié peut exécuter n'importe quoi.
+      - name: Valider le wrapper Gradle
+        if: hashFiles('gradlew') != ''
+        uses: gradle/actions/wrapper-validation@v6
+
+      - name: Set up JDK 25
+        if: hashFiles('gradlew', 'mvnw') != ''
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Set up Gradle
+        if: hashFiles('gradlew') != ''
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Build et tests (Gradle)
+        if: hashFiles('gradlew') != ''
+        run: ./gradlew build --no-daemon
+
+      - name: Build et tests (Maven)
+        if: hashFiles('gradlew') == '' && hashFiles('mvnw') != ''
+        run: ./mvnw --batch-mode --no-transfer-progress verify
+
+      - name: Publier les rapports de tests
+        if: failure() && hashFiles('gradlew', 'mvnw') != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-reports
+          path: |
+            build/reports/
+            **/build/reports/
+            **/target/surefire-reports/
+          retention-days: 7
