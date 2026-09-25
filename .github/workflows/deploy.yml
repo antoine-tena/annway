@@ -1,0 +1,49 @@
+name: Déploiement
+
+# Même principe que le déploiement d'annski : lancé à la main (Actions › Déploiement ›
+# Run workflow) sur main, après la CI complète rejouée ici, dans l'environnement GitHub
+# « production » (réservé à la branche main).
+#
+# Tant que l'hébergement n'est pas choisi, le job vérifie la CI puis dit qu'il n'y a rien à
+# déployer, ou échoue si du code existe déjà, plutôt que de faire semblant d'avoir déployé.
+# Quand il le sera, remplacer l'étape « Déployer » et déclarer ici ses secrets
+# (Settings › Environments › production).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+jobs:
+  ci:
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/ci.yml
+
+  app:
+    needs: ci
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Vérifier que main n'a pas avancé depuis le lancement
+        run: |
+          git fetch -q origin main
+          [ "$(git rev-parse origin/main)" = "$GITHUB_SHA" ] \
+            || { echo "::error::main a avancé depuis le lancement : relancer le workflow."; exit 1; }
+
+      - name: Déployer
+        run: |
+          if [ -z "$(find src -name '*.java' -print -quit)" ]; then
+            echo "Pas encore de code : rien à déployer." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo "::error::Du code existe mais aucune cible de déploiement n'est configurée dans deploy.yml."
+          exit 1

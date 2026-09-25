@@ -1,0 +1,11 @@
+# Veille des dépendances : une PR groupée par semaine. Ajouter ici l'écosystème de l'outil de
+# build (gradle, maven…) quand l'équipe l'aura choisi.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]

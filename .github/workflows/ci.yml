@@ -1,0 +1,59 @@
+name: Code Quality Assurance
+
+# Même découpage que la CI d'annski, pour un projet entièrement en Java : recherche de secrets,
+# puis compilation de src/ dès qu'il contient du code. Le dépôt part vide : le build et les
+# tests seront branchés ici quand l'équipe les aura choisis.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  secrets-scan:
+    runs-on: ubuntu-latest
+    # Sur une PR, gitleaks lit la liste de ses commits par l'API.
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      # [SECRETS] : tout l'historique est fouillé, pas seulement le dernier commit.
+      - name: Rechercher des secrets (gitleaks)
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  java-quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Aucun code Java
+        if: hashFiles('src/**/*.java') == ''
+        run: |
+          echo "Pas encore de code Java : rien à compiler." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Set up JDK 25
+        if: hashFiles('src/**/*.java') != ''
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 25
+
+      # Vérification minimale tant que l'équipe n'a pas choisi comment construire et tester :
+      # tout le code compile, sans aucun avertissement. À remplacer par le vrai build.
+      - name: Compiler
+        if: hashFiles('src/**/*.java') != ''
+        run: |
+          find src -name '*.java' > "$RUNNER_TEMP/sources.txt"
+          javac --release 25 -encoding UTF-8 -Xlint:all -Werror -d "$RUNNER_TEMP/classes" @"$RUNNER_TEMP/sources.txt"
