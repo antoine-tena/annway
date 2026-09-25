@@ -8,9 +8,18 @@ supposer qu'annski est présent sur la machine.
 ## Stack
 
 - **Tout le projet est en Java** : Java 25 (LTS), aucun autre langage applicatif.
-- Build par **wrapper** commité (`./gradlew` ou `./mvnw`) : jamais un Gradle ou un Maven installé
-  sur la machine. Le framework n'est pas encore choisi ; le décrire ici quand il le sera, avec les
-  commandes pour lancer, tester et vérifier le code.
+- **Aucun framework** : Java standard uniquement (JDK). Seule dépendance : JUnit, pour les tests.
+  Toute nouvelle bibliothèque suit [NOUVELLE-DEPENDANCE] ; un framework (Spring, Quarkus…) ne
+  s'ajoute pas sans décision de l'équipe.
+- **Gradle 9.7** en Kotlin DSL (`build.gradle.kts`), toujours par le wrapper `./gradlew`, jamais
+  un Gradle installé sur la machine. La distribution est vérifiée par sa somme SHA-256. Le
+  compilateur tourne en `-Xlint:all -Werror` : un avertissement fait échouer le build.
+- Point d'entrée : `fr.annway.Main`. Un paquet par domaine (`fr.annway.trips`,
+  `fr.annway.bookings`…).
+- Commandes :
+  - lancer : `./gradlew run` ;
+  - tester : `./gradlew test` ;
+  - tout vérifier comme la CI : `./gradlew build`.
 - CI : `.github/workflows/ci.yml` (règles, secrets, build et tests). Déploiement :
   `.github/workflows/deploy.yml`, lancé à la main depuis `main`.
 
@@ -33,8 +42,9 @@ règles de forme**.
   jusqu'à 40 lignes.
 - **[UNE-CLASSE]** Une classe publique par fichier (imposé par Java) ; pas de classe interne qui
   mériterait son propre fichier.
-- **[COUCHES]** Contrôleur → service → dépôt. Le contrôleur reçoit, vérifie l'accès, délègue et
-  répond ; aucune logique métier ni requête dans un contrôleur, aucun objet HTTP dans un service.
+- **[COUCHES]** Entrée (HTTP, ligne de commande) → service → stockage. L'entrée reçoit, vérifie
+  l'accès, délègue et répond ; aucune logique métier dans l'entrée, aucun objet HTTP dans un
+  service.
 
 ### Nommage
 - **[NOMS-INTERDITS]** Jamais de noms génériques : `data`, `res`, `val`, `tmp`, `info`, `obj`,
@@ -61,8 +71,9 @@ règles de forme**.
 - **[EXCEPTIONS]** Jamais de `catch` vide ni de `catch (Exception e)` générique qui avale
   l'erreur. Les erreurs métier sont des exceptions dédiées, avec un code machine en
   `UPPER_SNAKE_CASE` et un message en français pour l'utilisateur.
-- **[JOURNALISATION]** Jamais de `System.out` / `printStackTrace` : un logger SLF4J, avec des
-  messages paramétrés (`log.info("trip booked tripId={}", tripId)`), pas de concaténation.
+- **[JOURNALISATION]** Jamais de `System.out` / `printStackTrace` : le logger du JDK
+  (`System.getLogger`), avec des messages paramétrés
+  (`LOG.log(Level.INFO, "trip booked tripId={0}", tripId)`), pas de concaténation.
 
 ### Argent, dates, données personnelles
 - **[ARGENT]** Tout montant est un entier en centimes (`long priceCents`), dans la base, l'API et
@@ -78,7 +89,7 @@ règles de forme**.
 
 ### Sécurité et données
 - **[ENTREES]** Toute donnée qui entre (requête, API tierce, paramètre d'URL) est validée
-  (Bean Validation, `@Valid`) avant usage.
+  avant usage, à la frontière, par le constructeur compact du `record` qui la reçoit.
 - **[PERMISSIONS]** Chaque route déclare son authentification ; une route publique le dit et le
   justifie, et elle est limitée en débit.
 - **[SQL]** Jamais de requête SQL construite par concaténation : requêtes paramétrées.
