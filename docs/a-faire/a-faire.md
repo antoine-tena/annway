@@ -48,7 +48,7 @@ Ce qu'il faut faire, pourquoi, où regarder.
 ## 🟠 Important
 
 ### AF-02 · Fabrique de matériel (Simple Factory)
-- **État** : à faire
+- **État** : en cours — branche feat/fabrique-materiel, depuis le 15 octobre
 - **Effort** : S · **Qui** : Nathan · **Échéance** : —
 - **Origine** : `REPARTITION.md` partie 3 · `DiagrammeClasses.md`
 
