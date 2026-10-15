@@ -20,6 +20,9 @@ La charte tient en deux fichiers : celui-ci (§0, §1, §4, §5) et [`backend/CL
   avant toute mise en production.
 - **[PERMISSIONS]** Chaque route déclare son authentification ; une route publique le dit et le
   justifie, et elle est limitée en débit.
+- **[PROPRIETAIRE-CLASSE]** Chaque classe appartient à un seul membre de l'équipe, selon
+  [`REPARTITION.md`](REPARTITION.md) : personne, humain ou agent, ne crée, ne modifie ni ne
+  supprime une classe d'un autre module (revue).
 - **[TESTS-PERMISSIONS]** Toute route protégée a un test qui vérifie le refus (401, 403).
 - **[ACCESSIBILITE]** Chaque champ a un `<label>`, chaque bouton-icône un `aria-label`, chaque
   image informative un `alt` ; tout est utilisable au clavier.
@@ -32,6 +35,7 @@ endroit, ce qu'on y trouve ; pas de copie du code.
 
 - `backend/src/main/java/fr/annway/` : point d'entrée (`Main.java`), un paquet
   par domaine ; `backend/src/test/java/` : tests JUnit ; `backend/pom.xml` : build Maven.
+- `REPARTITION.md` : quel membre de l'équipe possède quelles classes.
 - `docs/a-faire/` : suivi du travail ; `charte.toml` : règles contrôlées par `charte`.
 - `.github/workflows/` : CI (`ci.yml`, workflows réutilisables de kiln et scan gitleaks) et
   déploiement manuel (`deploy.yml`).
@@ -77,6 +81,15 @@ d'appel, qui cite l'identifiant de la règle.
 En cas de conflit : **sécurité et intégrité des données > contrat d'API publié > lisibilité >
 règles de forme**. Exemple : renommer un booléen déjà exposé pour le préfixer en `is_`
 casserait le contrat ([CONTRAT-FIGE]) ; on ne le fait qu'en ouvrant une nouvelle version.
+
+### Ce qui vient de kiln
+- **[REMONTER-A-KILN]** Un défaut de ce que fournit kiln (fichier généré, règle commune de cette
+  charte, skill ou hook du plugin `base`, visibles dans `.claude/kiln`) ne se corrige pas dans
+  ce dépôt : `kiln update` écraserait la correction. Il remonte à kiln,
+  https://github.com/antoine-tena/kiln : **pull request** quand la correction est claire et
+  localisée (fork ou branche depuis `develop`, PR vers `develop`, avec le test qui l'aurait
+  détecté) ; **issue** quand il faut trancher entre plusieurs voies, ou qu'on ne sait pas
+  corriger. Dans le doute, l'issue d'abord. Une règle propre à ce dépôt, elle, s'amende ici.
 
 ---
 
@@ -166,8 +179,8 @@ puis en strict.
 - **[NOUVELLE-DEPENDANCE]** Ajouter une dépendance se justifie dans le commit : maintenue
   (release de moins d'un an), licence compatible, pas d'équivalent déjà présent, pas de nom
   proche d'un paquet connu (typosquatting). Les montées de version passent par `kiln update`
-  (compatibles par défaut, majeures par `kiln update --major`, contrôles à la suite), une PR par
-  passage ; Dependabot ne propose que les correctifs de sécurité (amendé le 9 octobre 2026).
+  (compatibles par défaut, majeures par `kiln update --major`, contrôles à la suite), une
+  branche par passage ; Dependabot ne propose que les correctifs de sécurité (amendé le 9 octobre 2026).
 - **[SBOM]** Chaque image déployée produit sa nomenclature logicielle (CycloneDX ou SPDX),
   conservée avec la release.
 
@@ -243,10 +256,13 @@ puis en strict.
 
 - **[PAS-SUR-MAIN]** Jamais de commit direct sur `main` ni sur `develop` : toujours une branche
   dédiée, de préférence dans son propre worktree (`.claude/worktrees/<nom>`), pour que deux
-  sessions ne se croisent pas dans l'arbre principal, puis une pull request relue et approuvée
-  par un autre membre de l'équipe. C'est imposé physiquement : le crochet
-  `no-commit-to-branch` du pre-commit refuse le commit en local, et le ruleset GitHub
-  « Protection main et develop » refuse tout push direct, force-push ou suppression.
+  sessions ne se croisent pas dans l'arbre principal, puis fusionnée dans `develop` par
+  `base:fusion`, directement : ni pull request ni approbation obligatoires (amendé le
+  15 octobre 2026). Une PR reste possible pour demander un avis, sans bloquer la fusion. Ce qui
+  est imposé physiquement : le crochet `no-commit-to-branch` du pre-commit refuse le commit en
+  local sur `main` et `develop` ; le ruleset GitHub « Protection develop » refuse la suppression
+  et le force-push de `develop`, et « Protection main » tout push sur `main` hors
+  administrateurs (une version passe par `base:version`).
 - **[BRANCHES]** Préfixes `feat/`, `fix/`, `refactor/`, `test/`, `chore/`, `docs/` ;
   minuscules, sans espaces, en français (`feat/carte-stations`).
 - **[COMMITS]** Petits et atomiques :
@@ -257,5 +273,5 @@ puis en strict.
   - un commit de migration ne mélange pas schéma et logique métier ;
   - jamais de mention `Co-Authored-By: Claude` ni `Claude-Session:` dans le message ;
   - jamais `--author` : l'auteur reste celui de `git config`.
-- **[FUSION]** Fusion de la PR sur GitHub en commit de fusion (pas de squash ni de rebase),
-  puis suppression de la branche (et du worktree, s'il y en avait un).
+- **[FUSION]** Fusion en commit de fusion (`git merge --no-ff`, jamais de squash ni de rebase),
+  puis suppression de la branche, locale et distante, et du worktree : skill `base:fusion`.
