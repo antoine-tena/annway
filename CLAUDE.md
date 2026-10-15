@@ -1,128 +1,261 @@
-# annway
+# annway — consignes et charte de développement
 
 Covoiturage pour les sorties annski : proposer un trajet vers la station, réserver une place.
 
-Ce dépôt est **indépendant** d'annski : il ne dépend d'aucun de ses fichiers et ne doit pas
-supposer qu'annski est présent sur la machine.
+Envergure : **Flame**, une app en production, de vrais utilisateurs, plusieurs contributeurs (changer : `kiln set envergure=…`).
 
-## Stack
+Backend Java 25, Maven, sans framework (`backend/`).
+Ce fichier réunit les consignes de travail sur le dépôt et la **charte**, norme unique du code,
+reprise de celle d'AnnSki : tout code nouveau la respecte, humains et agents.
+La charte tient en deux fichiers : celui-ci (§0, §1, §4, §5) et [`backend/CLAUDE.md`](backend/CLAUDE.md)
+(§3), chargés par Claude Code dès qu'il travaille dans le dossier.
 
-- **Tout le projet est en Java** : Java 25 (LTS), aucun autre langage applicatif.
-- **Aucun framework.** Le dépôt part vide : l'outil de build, la façon de tester et toute
-  bibliothèque se décident en équipe, puis se décrivent ici (avec les commandes pour lancer,
-  tester et vérifier le code) et se branchent dans la CI.
-- Sources dans `src/main/java`, tests dans `src/test/java`, paquet racine `fr.annway`, un paquet
-  par domaine (`fr.annway.trips`, `fr.annway.bookings`…).
-- CI : `.github/workflows/ci.yml` (secrets, compilation). Déploiement :
-  `.github/workflows/deploy.yml`, lancé à la main depuis `main`.
+## Propre à annway
+
+- Ce dépôt est **indépendant** d'annski : il ne dépend d'aucun de ses fichiers et ne suppose pas
+  qu'annski est présent sur la machine.
+- **Tout le projet est en Java** (Java 25 LTS), aucun autre langage applicatif. Aucun
+  framework : toute bibliothèque ou tout outil se décide en équipe ([NOUVELLE-DEPENDANCE]).
+- Déploiement : `.github/workflows/deploy.yml`, lancé à la main depuis `main`, qui rejoue la CI
+  avant toute mise en production.
+- **[PERMISSIONS]** Chaque route déclare son authentification ; une route publique le dit et le
+  justifie, et elle est limitée en débit.
+- **[TESTS-PERMISSIONS]** Toute route protégée a un test qui vérifie le refus (401, 403).
+- **[ACCESSIBILITE]** Chaque champ a un `<label>`, chaque bouton-icône un `aria-label`, chaque
+  image informative un `alt` ; tout est utilisable au clavier.
+
+## Carte du repo
+
+Où chercher, pour ne pas explorer : à lire avant d'ouvrir des fichiers, à tenir à jour dans le
+commit qui ajoute, déplace ou retire un dossier, un domaine ou un point d'entrée. Une ligne par
+endroit, ce qu'on y trouve ; pas de copie du code.
+
+- `backend/src/main/java/fr/annway/` : point d'entrée (`Main.java`), un paquet
+  par domaine ; `backend/src/test/java/` : tests JUnit ; `backend/pom.xml` : build Maven.
+- `docs/a-faire/` : suivi du travail ; `charte.toml` : règles contrôlées par `charte`.
+- `.github/workflows/` : CI (`ci.yml`, workflows réutilisables de kiln et scan gitleaks) et
+  déploiement manuel (`deploy.yml`).
 
 ## Langue
 
 - Échanges, documentation et messages de commit en français ; code en anglais.
 
-## Règles de code
+## Où est l'état du projet
 
-Une règle se cite par son identifiant entre crochets, jamais par un numéro de ligne. Une règle
-impossible à tenir s'amende ici, avec sa raison ; on ne la contourne pas en silence.
+- **`docs/a-faire/` est la seule source à jour** : [`a-faire.md`](docs/a-faire/a-faire.md), la
+  liste unique de ce qui reste, rangée par criticité (une entrée `AF-NN` par chose, avec son
+  état et son détail ; ce qui est terminé est dans sa section « Fait »),
+  [`ecarte.md`](docs/a-faire/ecarte.md), ce qui a été refusé, et
+  [`urgent.md`](docs/a-faire/urgent.md), ce que seul un humain de l'équipe peut faire (une case
+  par action). Skill `base:a-faire` ; la status line de Claude Code les compte.
 
+---
+
+## 0. Mode d'emploi de la charte
+
+### Identifiants stables
+Chaque règle porte un identifiant entre crochets, par exemple **`[VERROUS]`**. Le code, les
+tests, `charte.toml` et les PR citent une règle par cet identifiant — `CLAUDE.md [VERROUS]` —,
+**jamais par un numéro de ligne**. Un identifiant ne change jamais et n'est jamais réutilisé ;
+une règle abolie garde le sien, marquée *abrogée*. `CLAUDE.md` désigne la charte entière :
+l'identifiant se trouve dans l'un de ses trois fichiers.
+
+### Trois régimes d'application
+- **Stricte** : zéro infraction tolérée, le contrôle fait échouer la CI.
+- **Cliquet** : un passif existe ; son budget est plafonné et **ne peut que baisser**. Réduire
+  la dette et abaisser le budget dans le même commit.
+- **Revue** : non vérifiable mécaniquement ; appliqué en relecture.
+
+Les règles contrôlées sont décrites dans `charte.toml` et vérifiées par la commande `charte`
+(installée avec kiln) après chaque édition, avant chaque commit (pre-commit) et en CI ;
+les autres sont listées dans `scripts/ci/charte-non-verifiee.txt` et appliquées en revue.
+Une règle impossible à tenir s'**amende ici**, explicitement, avec sa raison et sa date — on ne
+la contourne pas en silence. Une exception ponctuelle se justifie par un commentaire au point
+d'appel, qui cite l'identifiant de la règle.
+
+### Hiérarchie
 En cas de conflit : **sécurité et intégrité des données > contrat d'API publié > lisibilité >
-règles de forme**.
+règles de forme**. Exemple : renommer un booléen déjà exposé pour le préfixer en `is_`
+casserait le contrat ([CONTRAT-FIGE]) ; on ne le fait qu'en ouvrant une nouvelle version.
+
+---
+
+## 1. Règles communes
 
 ### Taille et découpage
-- **[TAILLE-FICHIER]** 300 lignes au plus par fichier `.java`.
-- **[TAILLE-METHODE]** Une méthode = une responsabilité, 30 lignes au plus. Un test peut aller
-  jusqu'à 40 lignes.
-- **[UNE-CLASSE]** Une classe publique par fichier (imposé par Java) ; pas de classe interne qui
-  mériterait son propre fichier.
-- **[COUCHES]** Entrée (HTTP, ligne de commande) → service → stockage. L'entrée reçoit, vérifie
-  l'accès, délègue et répond ; aucune logique métier dans l'entrée, aucun objet HTTP dans un
-  service.
+- **[TAILLE-FICHIER]** 300 lignes au plus par fichier (cliquet).
+  - Backend : une classe qui dépasse se découpe en classes d'une responsabilité chacune.
+  - Exemptés : migrations générées, `settings.py`, fichiers générés — ceux que
+    `.gitattributes` marque `linguist-generated`, seule liste (`openapi.json`, types
+    TypeScript générés, verrous).
+- **[TAILLE-FONCTION]** Une fonction = une responsabilité, **30 lignes au plus** (hors
+  gabarit des composants, hors docstring). Un test peut aller jusqu'à 40 lignes si le
+  découper cacherait le scénario.
+- **[UNE-CLASSE]** Une classe par fichier. Exceptions, qui restent sous [TAILLE-FICHIER] : les
+  schémas Pydantic d'un même domaine (`schemas.py`, `responses.py`), les exceptions
+  métier d'un même domaine, les classes de test d'un même fichier de test.
 
 ### Nommage
-- **[NOMS-INTERDITS]** Jamais de noms génériques : `data`, `res`, `val`, `tmp`, `info`, `obj`,
-  `item` seul, `result` seul, `x`. Le nom dit ce que contient la variable (`seatCount`,
-  `tripPriceCents`).
-- **[VOCABULAIRE]** Le code est en anglais (`Trip`, `Ride`, `Seat`, `Driver`), les textes affichés
-  en français.
-- **[CASSE]** Classes en `PascalCase`, méthodes et variables en `camelCase`, constantes en
-  `UPPER_SNAKE_CASE`, paquets en minuscules (`fr.annway.trips`).
-- **[BOOLEENS]** Un booléen est préfixé : `is`, `has`, `should`, `can` (`isFull`, `canBook`).
-- **[ZERO-MAGIE]** Pas de littéral métier en dur (statut, rôle, seuil, délai, prix) : `enum` ou
-  constante `static final` nommée. `0`, `1`, `-1`, `""` et les littéraux des tests ne sont pas
-  magiques.
+- **[NOMS-INTERDITS]** Jamais de noms génériques : `data`, `df`, `res`, `val`, `tmp`, `info`,
+  `obj`, `item` seul, `result` seul, `x`. Le nom dit *ce que* contient la variable
+  (`sales_by_month`, `station_coordinates`). Seule exception : un paramètre imposé par une
+  signature de framework.
+- **[VOCABULAIRE]** Le code parle comme les apps du backend, en anglais ; les textes affichés
+  (titres, axes, légendes, messages) sont en français. Les adresses des pages sont des URL
+  publiques et n'ont pas à suivre le vocabulaire du code.
+- **[BOOLEENS]** Un booléen est préfixé : `is`, `has`, `should`, `can` en Java (`isFull`, `canBook`).
+- **[CASSE]** Classes Java en PascalCase ; méthodes et variables Java en camelCase ; paquets
+  Java en minuscules ; constantes en `UPPER_SNAKE_CASE`.
 
-### Java
-- **[JAVA-MODERNE]** `record` pour les objets de données immuables (DTO, valeurs), `sealed` +
-  `switch` par motifs pour les aiguillages sur un statut, `var` seulement quand le type se lit
-  à droite.
-- **[NULL]** Une méthode ne renvoie jamais `null` : `Optional<T>` pour une valeur absente,
-  collection vide pour une liste. Paramètres vérifiés avec `Objects.requireNonNull` aux
-  frontières.
-- **[TYPES-BRUTS]** Pas de types bruts (`List` sans paramètre), pas de cast non vérifié sans
-  justification en commentaire.
-- **[EXCEPTIONS]** Jamais de `catch` vide ni de `catch (Exception e)` générique qui avale
-  l'erreur. Les erreurs métier sont des exceptions dédiées, avec un code machine en
-  `UPPER_SNAKE_CASE` et un message en français pour l'utilisateur.
-- **[JOURNALISATION]** Jamais de `System.out` / `printStackTrace` : le logger du JDK
-  (`System.getLogger`), avec des messages paramétrés
-  (`LOG.log(Level.INFO, "trip booked tripId={0}", tripId)`), pas de concaténation.
+### Valeurs magiques
+- **[ZERO-MAGIE]** Pas de littéral métier en dur (statut, rôle, seuil, délai, prix, couleur,
+  nom de colonne répété) : `enum` ou constante `static final` nommée en Java. Ne sont pas magiques : `0`, `1`, `-1`, `""`, `None`, les index et les littéraux des
+  tests.
 
-### Argent, dates, données personnelles
-- **[ARGENT]** Tout montant est un entier en centimes (`long priceCents`), dans la base, l'API et
-  l'affichage. Jamais `double` ni `float` ; conversion en euros uniquement à l'affichage.
-- **[FUSEAU]** Instants stockés en UTC (`Instant`) ; toute notion calendaire (« aujourd'hui »,
-  date de départ) se calcule en `ZoneId.of("Europe/Paris")`. L'horloge est injectée (`Clock`),
-  jamais `LocalDate.now()` sans argument.
-- **[DONNEES-PERSO]** Aucune donnée personnelle (e-mail, nom, téléphone, adresse, IP complète)
-  dans les logs, les messages d'erreur, les URL ou les clés de cache : on journalise
-  l'identifiant, pas la personne.
-- **[SECRETS]** Aucun secret dans le code ni dans le dépôt : tout passe par l'environnement.
-  Un secret commis par erreur est considéré compromis et changé.
+### Argent, dates, données personnelles, secrets
+- **[ARGENT]** Tout montant est un **entier en centimes** (`*_cents`), dans la base, l'API et
+  le front. Jamais de `float` pour de l'argent ; conversion en euros uniquement à l'affichage.
+- **[FUSEAU]** Stockage en UTC. Toute notion calendaire — « aujourd'hui »,
+  jour, mois, bornes d'une période — se calcule en `Europe/Paris` (`ZoneId.of("Europe/Paris")`),
+  jamais par `.date()` sur un instant UTC.
+- **[DONNEES-PERSO]** Aucune donnée personnelle (e-mail, nom, téléphone, pièce, IP complète)
+  dans les logs, les messages d'erreur, les URL, les clés de cache ou les figures : on
+  journalise l'identifiant (`user_id`), pas la personne. Toute nouvelle donnée personnelle
+  stockée est couverte par l'export et l'anonymisation RGPD dans le même lot.
+- **[SECRETS]** Aucun secret dans le code ni dans le dépôt : tout passe par l'environnement
+  (`System.getenv` lu à la frontière côté backend). Un secret commis par erreur
+  est considéré compromis et changé.
 
-### Sécurité et données
-- **[ENTREES]** Toute donnée qui entre (requête, API tierce, paramètre d'URL) est validée
-  avant usage, à la frontière, par le constructeur compact du `record` qui la reçoit.
-- **[PERMISSIONS]** Chaque route déclare son authentification ; une route publique le dit et le
-  justifie, et elle est limitée en débit.
-- **[SQL]** Jamais de requête SQL construite par concaténation : requêtes paramétrées.
-- **[TRANSACTIONS]** Toute écriture touchant plus d'une ligne ou d'une table est dans une
-  transaction, au périmètre le plus court.
-- **[VERROUS]** Places et paiements : verrouillage en base (`SELECT … FOR UPDATE`) ou mise à jour
-  conditionnelle, jamais lecture-calcul-écriture en Java : deux passagers ne réservent pas la
-  dernière place.
-- **[TEMPS-CONSTANT]** Toute comparaison de jeton ou de secret se fait en temps constant
-  (`MessageDigest.isEqual`), jamais par `equals`.
-- **[ACCESSIBILITE]** Chaque champ a un `<label>`, chaque bouton-icône un `aria-label`, chaque
-  image informative un `alt` ; tout est utilisable au clavier.
+### Erreurs
+- **[EXCEPTIONS]** Jamais d'exception avalée en silence (`except: pass`, `catch {}`) ni de
+  capture générique (`except Exception`, `catch (Exception e)`) qui ne la relance pas ou ne la journalise pas.
+
+### Commentaires et tests
+- **[RENVOIS-AUDIT]** Un commentaire dit la contrainte au présent, jamais l'historique : aucun
+  renvoi à un audit ou à un constat (« audit H36 », « (CART-06) ») dans le code. L'historique va
+  dans le message de commit ; le constat d'origine reste dans `docs/` (strict).
+
+---
+
+## 3. Backend (Java 25, Maven, sans framework)
+
+Dans [`backend/CLAUDE.md`](backend/CLAUDE.md) : règles propres à Java 25, Maven, sans framework.
+
+---
+
+## 4. Standards 2026
+
+Régime **revue** tant qu'aucun contrôle ne les vérifie ; chacun a vocation à passer en cliquet
+puis en strict.
+
+### Chaîne d'approvisionnement
+- **[DEPENDANCES-FIGEES]** Toute dépendance est résolue par un lockfile commité (`uv.lock`,
+  `pnpm-lock.yaml`) ; la CI installe en mode figé (`uv sync --locked`, `--frozen-lockfile`) et
+  échoue si le lockfile dérive. Maven n'a pas de lockfile : versions exactes dans `backend/pom.xml`
+  (l'enforcer refuse plages et versions dynamiques), sommes de contrôle exigées
+  (`.mvn/maven.config`), Maven lui-même figé par le wrapper et sa somme SHA-256.
+- **[UV-PODMAN]** Python passe par uv (`uv add`, `uv run`, `uv tool install`) : jamais pip,
+  pipx ni `requirements.txt`. Les conteneurs passent par podman (`Containerfile`,
+  `compose.yaml`, `podman-compose`) : jamais docker, `Dockerfile` ni `docker-compose.yml`. Java passe par le wrapper `backend/mvnw` : jamais un `mvn` installé sur le poste.
+- **[IMAGES-PAR-EMPREINTE]** Toute image de base de conteneur est épinglée par empreinte
+  `@sha256:`, jamais par un tag mobile seul.
+- **[AUDIT-VULNERABILITES]** La CI audite les dépendances à chaque commit (`uv audit` pour
+  chaque projet Python, `pnpm audit --audit-level=high` pour un front pnpm) ; une vulnérabilité haute ou
+  critique bloque la fusion, sauf dérogation datée et justifiée. Le backend Maven n'est pas encore audité en CI : les
+  alertes Dependabot de GitHub en tiennent lieu.
+- **[NOUVELLE-DEPENDANCE]** Ajouter une dépendance se justifie dans le commit : maintenue
+  (release de moins d'un an), licence compatible, pas d'équivalent déjà présent, pas de nom
+  proche d'un paquet connu (typosquatting). Les montées de version passent par `kiln update`
+  (compatibles par défaut, majeures par `kiln update --major`, contrôles à la suite), une PR par
+  passage ; Dependabot ne propose que les correctifs de sécurité (amendé le 9 octobre 2026).
+- **[SBOM]** Chaque image déployée produit sa nomenclature logicielle (CycloneDX ou SPDX),
+  conservée avec la release.
+
+### Exécution durcie
+- **[CONTENEUR-DURCI]** Conteneurs *rootless* et utilisateur non-root, système de fichiers en
+  lecture seule hors volumes déclarés, `cap_drop: ALL`, aucun secret dans l'image ni dans ses
+  couches.
+- **[SANTE]** Chaque service expose une sonde de vivacité et une sonde de disponibilité
+  distinctes ; la seconde vérifie réellement ses dépendances (base, cache).
+- **[SAUVEGARDE-TESTEE]** Une sauvegarde jamais restaurée n'existe pas : la restauration est
+  répétée à intervalle régulier et chronométrée.
+
+### Sécurité navigateur
+- **[CSP-NONCE]** Content-Security-Policy stricte par *nonce* : pas de `unsafe-inline`, pas de
+  `unsafe-eval`, pas de joker d'hôte. Tout nouveau domaine tiers s'ajoute explicitement et se
+  justifie.
+- **[EN-TETES]** `Strict-Transport-Security` (préchargé), `X-Content-Type-Options: nosniff`,
+  `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy` minimale,
+  `Cross-Origin-Opener-Policy: same-origin`. Vérifiés par un test.
+- **[COOKIES]** Tout cookie de session est `HttpOnly`, `Secure`, `SameSite=Lax` au minimum, et
+  préfixé `__Host-` quand il n'a pas besoin de sous-domaine.
+- **[INTEGRITE]** Aucun script tiers chargé depuis un CDN sans *Subresource Integrity*.
+
+### Observabilité
+- **[OPENTELEMETRY]** Traces distribuées OpenTelemetry (propagation W3C `traceparent`) de la
+  requête jusqu'aux traitements de fond et aux API tierces.
+- **[SLO]** Chaque parcours critique a un objectif de niveau de service chiffré
+  (disponibilité, latence p95) et un budget d'erreur. Un budget épuisé gèle les
+  fonctionnalités au profit de la fiabilité.
+- **[ALERTE-SUR-SYMPTOME]** On alerte sur ce que l'utilisateur subit (taux d'erreur, latence,
+  file de traitements qui grossit), pas sur des causes internes (CPU, mémoire).
+
+### Performance
+- **[LATENCE-API]** p95 < 300 ms pour une route de lecture ; une route plus lente se justifie ou
+  passe par le cache.
 
 ### Tests
-- **[TESTS]** Toute classe de service a ses tests.
-- **[NON-REGRESSION]** Toute correction de bug arrive avec le test qui l'aurait détectée.
-- **[RESEAU]** Aucun test n'émet de requête réseau réelle.
-- **[HORLOGE]** Tout test lié à une date utilise une `Clock` fixe.
-- **[TESTS-PERMISSIONS]** Toute route protégée a un test qui vérifie le refus (401, 403).
+- **[TESTS-PROPRIETES]** Les calculs à invariants — agrégations, bornes de période, totaux,
+  pourcentages — ont des tests par propriétés (`jqwik`) en plus des exemples.
+- **[TESTS-MUTATION]** Les modules de calcul critiques passent périodiquement au test par
+  mutation (`pitest`) : un mutant qui survit est un test manquant.
 
-### Dépendances
-- **[NOUVELLE-DEPENDANCE]** Toute dépendance ou tout outil se décide en équipe : maintenu, de
-  licence compatible, sans équivalent dans le JDK, pas de nom proche d'un paquet connu.
-- **[DEPENDANCES-FIGEES]** Versions exactes, jamais de plage (`+`, `latest`, `[1.0,)`), et
-  vérifiées par somme de contrôle quand l'outil le permet.
+### Java
+- **[VALIDATION-AUX-FRONTIERES]** Toute donnée qui entre (API tierce, fichier source,
+  `localStorage`, paramètre d'URL) est validée par un schéma à l'exécution avant usage : le
+  type statique ne protège que ce que le compilateur voit.
 
-### IA
-- **[IA-RESPONSABLE]** Le code produit par un agent obéit aux mêmes règles et à la même relecture
-  que le code humain ; celui qui fusionne en répond.
-- **[IA-CONFIDENTIALITE]** Aucun secret ni donnée personnelle réelle dans une conversation avec
-  un agent : on travaille sur des données de test.
+### Livraison continue
+- **[FEATURE-FLAGS]** Une fonctionnalité risquée se livre éteinte derrière un drapeau, puis
+  s'active sans redéploiement. Un drapeau a une date de retrait ; au-delà, il est supprimé.
+- **[DEPLOIEMENT-REVERSIBLE]** Tout déploiement est annulable en une commande, sans perte de
+  données : un déploiement qui migre le schéma se défait en restaurant la
+  sauvegarde d'avant bascule.
+- **[CI-RAPIDE]** La CI complète tient en moins de 10 minutes ; un test instable est mis en
+  quarantaine et corrigé dans la semaine, jamais relancé jusqu'à ce qu'il passe.
 
-## Git & Commits
+### Développement assisté par IA
+- **[IA-RESPONSABLE]** Le code produit par un agent obéit à la même charte et à la même
+  relecture que le code humain ; celui qui fusionne en répond.
+- **[IA-CONTEXTE]** Les deux fichiers de la charte sont le contexte de référence des agents :
+  une règle que l'agent enfreint régulièrement est une règle mal écrite, à reformuler là où elle
+  vit.
+- **[IA-CONFIDENTIALITE]** Aucun secret, aucune donnée personnelle réelle n'est collée dans une
+  conversation avec un agent ; on travaille sur des données de test ou publiques.
+- **[IA-FONCTIONNALITE]** Toute fonctionnalité qui appelle un modèle de langage passe par
+  une file, borne son coût par appel, journalise modèle et jetons
+  consommés, et ne laisse jamais le texte généré déclencher une action sans validation
+  (injection de consignes).
 
-- **[PAS-SUR-MAIN]** Jamais de commit direct sur `main` : toujours une branche puis une pull
-  request, fusionnée une fois la CI verte.
-- **[BRANCHES]** Préfixes `feature/`, `fix/`, `chore/`, `docs/`, `style/`, `refactor/`,
-  `hotfix/` ; minuscules, sans espaces (`feature/reservation-place`).
+---
+
+## 5. Git
+
+- **[PAS-SUR-MAIN]** Jamais de commit direct sur `main` ni sur `develop` : toujours une branche
+  dédiée, de préférence dans son propre worktree (`.claude/worktrees/<nom>`), pour que deux
+  sessions ne se croisent pas dans l'arbre principal, puis une pull request relue et approuvée
+  par un autre membre de l'équipe. C'est imposé physiquement : le crochet
+  `no-commit-to-branch` du pre-commit refuse le commit en local, et le ruleset GitHub
+  « Protection main et develop » refuse tout push direct, force-push ou suppression.
+- **[BRANCHES]** Préfixes `feat/`, `fix/`, `refactor/`, `test/`, `chore/`, `docs/` ;
+  minuscules, sans espaces, en français (`feat/carte-stations`).
 - **[COMMITS]** Petits et atomiques :
-  - 10 fichiers au plus par commit ;
-  - titre de 50 caractères au plus, en français, préfixé : `feat:`, `fix:`, `refactor:`,
-    `style:`, `docs:`, `perf:`, `test:`, `build:`, `ci:`, `chore:`, `revert:`.
-- N'ajoute jamais de mention `Co-Authored-By: Claude` ni `Claude-Session:` dans les messages de commit.
-- N'utilise jamais `--author` : l'auteur des commits reste celui configuré dans `git config`.
+  - **10 fichiers au plus** par commit ;
+  - titre de **50 caractères au plus**, en français, préfixé par le type, avec une portée
+    facultative : `feat:`, `fix:`, `refactor:`, `style:`, `docs:`, `perf:`, `test:`,
+    `build:`, `ci:`, `chore:`, `revert:` (`fix(carte): …`) ;
+  - un commit de migration ne mélange pas schéma et logique métier ;
+  - jamais de mention `Co-Authored-By: Claude` ni `Claude-Session:` dans le message ;
+  - jamais `--author` : l'auteur reste celui de `git config`.
+- **[FUSION]** Fusion de la PR sur GitHub en commit de fusion (pas de squash ni de rebase),
+  puis suppression de la branche (et du worktree, s'il y en avait un).

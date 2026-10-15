@@ -5,21 +5,13 @@
 *.pem
 *.key
 *.p12
-*.jks
-*.keystore
-application-local.*
 
 # --- Claude Code : réglages personnels (le .claude/settings.json reste partagé) ---
 .claude/settings.local.json
+.claude/worktrees/
+# Index de Serena (plugin serena@kiln), propre à chaque worktree.
+.serena/
 CLAUDE.local.md
-
-# --- Java ---
-*.class
-hs_err_pid*.log
-replay_pid*.log
-
-# --- Build ---
-build/
 
 # --- Journaux ---
 *.log
@@ -27,19 +19,23 @@ logs/
 
 # --- Éditeurs ---
 .idea/
-*.iml
-*.ipr
-*.iws
-out/
-.vscode/*
-!.vscode/extensions.json
-.classpath
-.project
-.settings/
-.factorypath
-bin/
 *.swp
 
 # --- Système ---
 .DS_Store
 Thumbs.db
+*:Zone.Identifier
+
+# --- Java (backend) : produits de Maven et de la JVM, magasins de clés ---
+backend/target/
+*.class
+hs_err_pid*.log
+replay_pid*.log
+*.jks
+*.keystore
+# Projets des IDE Java (IntelliJ, Eclipse) : propres à chaque poste.
+*.iml
+.classpath
+.project
+.settings/
+.factorypath

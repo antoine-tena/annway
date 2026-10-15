@@ -1,5 +1,5 @@
-# Veille des dépendances : une PR groupée par semaine. Ajouter ici l'écosystème de l'outil de
-# build (gradle, maven…) quand l'équipe l'aura choisi.
+# Veille des dépendances : une PR groupée par semaine. `kiln update` ne monte pas les versions
+# du pom.xml : Dependabot les propose ici.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -8,4 +8,12 @@ updates:
       interval: weekly
     groups:
       actions:
+        patterns: ["*"]
+
+  - package-ecosystem: maven
+    directory: /backend
+    schedule:
+      interval: weekly
+    groups:
+      maven:
         patterns: ["*"]

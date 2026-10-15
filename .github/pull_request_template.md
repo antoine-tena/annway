@@ -12,6 +12,7 @@
 
 ## Vérifications
 
-- [ ] Le code respecte les règles du `CLAUDE.md`
-- [ ] La CI est verte, et un bug corrigé arrive avec son test ([NON-REGRESSION])
+- [ ] Le code respecte les règles du `CLAUDE.md` (taille, nommage, [ZERO-MAGIE])
+- [ ] Commits de 10 fichiers au plus, titres préfixés de 50 caractères au plus ([COMMITS])
+- [ ] Un bug corrigé arrive avec le test qui l'aurait détecté ([NON-REGRESSION])
 - [ ] Aucun secret ni donnée personnelle réelle dans le diff ([SECRETS], [DONNEES-PERSO])
