@@ -20,6 +20,9 @@ La charte tient en deux fichiers : celui-ci (§0, §1, §4, §5) et [`backend/CL
   avant toute mise en production.
 - **[PERMISSIONS]** Chaque route déclare son authentification ; une route publique le dit et le
   justifie, et elle est limitée en débit.
+- **[PROPRIETAIRE-CLASSE]** Chaque classe appartient à un seul membre de l'équipe, selon
+  [`REPARTITION.md`](REPARTITION.md) : personne, humain ou agent, ne crée, ne modifie ni ne
+  supprime une classe d'un autre module (revue).
 - **[TESTS-PERMISSIONS]** Toute route protégée a un test qui vérifie le refus (401, 403).
 - **[ACCESSIBILITE]** Chaque champ a un `<label>`, chaque bouton-icône un `aria-label`, chaque
   image informative un `alt` ; tout est utilisable au clavier.
@@ -32,6 +35,7 @@ endroit, ce qu'on y trouve ; pas de copie du code.
 
 - `backend/src/main/java/fr/annway/` : point d'entrée (`Main.java`), un paquet
   par domaine ; `backend/src/test/java/` : tests JUnit ; `backend/pom.xml` : build Maven.
+- `REPARTITION.md` : quel membre de l'équipe possède quelles classes.
 - `docs/a-faire/` : suivi du travail ; `charte.toml` : règles contrôlées par `charte`.
 - `.github/workflows/` : CI (`ci.yml`, workflows réutilisables de kiln et scan gitleaks) et
   déploiement manuel (`deploy.yml`).
