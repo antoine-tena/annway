@@ -2,24 +2,90 @@
 
 Covoiturage pour les sorties annski : proposer un trajet vers la station, réserver une place.
 
-## Prérequis
+## Démarrage rapide
 
-- JDK 25 (Temurin recommandé).
+Après le clone, depuis la racine du dépôt (prérequis : [uv](https://docs.astral.sh/uv/), un JDK 25 et `unzip`) :
+
+```sh
+uv tool install git+https://github.com/antoine-tena/kiln   # une fois par poste
+kiln install
+```
+
+Puis vérifier le backend : `cd backend && ./mvnw verify`. Détail de chaque commande ci-dessous.
+
+## Équipe
+
+- [@antoine-tena](https://github.com/antoine-tena)
+- [@NathanBarrachin](https://github.com/NathanBarrachin)
+- [@Trofymov-Pavlo](https://github.com/Trofymov-Pavlo)
 
 ## Organisation
 
-- `src/main/java` : le code, paquet racine `fr.annway`.
-- `src/test/java` : les tests.
-- [`CLAUDE.md`](CLAUDE.md) : la stack et les règles du projet.
+- `backend/` : le backend Java 25 (Maven, sans framework) ; règles dans [`backend/CLAUDE.md`](backend/CLAUDE.md).
+- [`CLAUDE.md`](CLAUDE.md) : la charte commune (nommage, taille, git…), pour les humains comme
+  pour les agents.
+- `.vscode/` : réglages et extensions recommandées, partagés par toute l'équipe.
+
+Le projet est généré et tenu à jour par [kiln](https://github.com/antoine-tena/kiln) (réponses
+dans `.copier-answers.yml`). Changer un paramètre (équipe, frameworks, podman…) :
+`kiln set <clé>=<valeur>`, sur une branche.
+
+## Installation
+
+Prérequis : ceux du démarrage rapide. Puis, après le clone, depuis la
+racine du dépôt :
+
+```sh
+kiln install
+```
+
+La commande demande une fois le système du poste (Linux, WSL ou macOS), installe les
+dépendances (backend) et active les garde-fous du
+commit (pre-commit, dont le refus de commiter sur `main` ou `develop`). On peut la relancer sans
+risque.
+
+## Lancer le projet
+
+```sh
+cd backend && ./mvnw -q package -DskipTests && java -jar target/annway-0.1.0.jar
+```
+
+## Mettre à jour
+
+Sur une branche dédiée (`chore/kiln-update`), avec un arbre propre :
+
+```sh
+kiln update            # mises à jour compatibles
+kiln update --major    # y compris les versions majeures
+```
+
+Elle rapporte les évolutions du modèle (charte, outillage, configuration) sans écraser les
+modifications locales, met à jour les dépendances, puis lance les contrôles. Relire le diff,
+puis ouvrir une pull request.
+
+## Vérifier le code
+
+```sh
+kiln check
+```
+
+`./mvnw verify` pour le backend Java (compilation stricte, JUnit, couverture), puis la charte.
+
+## Suivi du travail
+
+Ce qui reste à faire est dans [`docs/a-faire/`](docs/a-faire/) : `a-faire.md` (la liste, par
+criticité), `ecarte.md` (ce qui a été refusé) et `urgent.md` (ce que seul un humain peut faire).
 
 ## Contribuer
 
-1. Créer une branche depuis `main` (`feature/…`, `fix/…`).
-2. Respecter les règles du [`CLAUDE.md`](CLAUDE.md) : elles valent pour tout le monde, humains
-   et agents.
-3. Ouvrir une pull request ; la CI doit être verte avant la fusion.
+1. Créer une branche depuis la branche par défaut du dépôt (`develop` quand elle existe,
+   sinon `main`) : `feat/…`, `fix/…`, voir [BRANCHES].
+2. Respecter les règles du [`CLAUDE.md`](CLAUDE.md).
+3. Ouvrir une pull request : elle doit être approuvée par un autre membre de l'équipe avant la
+   fusion. Personne ne peut pousser directement sur `main` ou `develop`.
 
 ## Déploiement
 
-Actions › Déploiement › Run workflow, depuis `main` : la CI est rejouée avant toute mise en
-production.
+Actions › Déploiement › Run workflow, depuis `main` :
+https://github.com/antoine-tena/annway/actions/workflows/deploy.yml. La CI est rejouée avant
+toute mise en production.

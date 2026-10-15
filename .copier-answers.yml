@@ -1,0 +1,22 @@
+# Réponses de kiln : ne pas modifier à la main, `kiln update` s'en sert.
+_commit: c739b8f
+_src_path: https://github.com/antoine-tena/kiln.git
+backend: java
+boussole: annway en service
+date_creation: '2026-10-15'
+description: 'Covoiturage pour les sorties annski : proposer un trajet vers la station,
+    réserver une place.'
+envergure: flame
+equipe:
+- antoine-tena
+- NathanBarrachin
+- Trofymov-Pavlo
+frontend: aucun
+nom: annway
+podman: false
+proprietaire: antoine-tena
+serena: false
+statusline_ci: true
+titre: annway
+type_projet: api
+url_sante_prod: ''
