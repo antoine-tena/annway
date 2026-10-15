@@ -16,6 +16,10 @@ Hiérarchie des comptes, sécurité des profils, véhicules du conducteur, avis 
 - `Vehicule` (modèle, immatriculation, capacité)
 - `Avis` (notes et commentaires croisés)
 - `Message` (messagerie liée aux annonces)
+- Erreurs métier du domaine : `AccountError` (énumération), `AccountException`
+
+Dans le code (paquet `fr.annway.account`, en anglais) : `User`, `Passenger`, `Driver`,
+`Profile`, `Vehicle`, `Review`, `Message`. Données de test : `AccountFixtures`.
 
 ## Partie 2 : Trajets, réservations et paiement (Antoine)
 
