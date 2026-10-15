@@ -6,6 +6,17 @@
     "PROJET_FRONT": "",
     "PROJET_ENV_TEST": ""
   },
+  "extraKnownMarketplaces": {
+    "kiln": {
+      "source": {
+        "source": "github",
+        "repo": "antoine-tena/kiln"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "base@kiln": true
+  },
   "permissions": {
     "deny": [
       "Read(./.env)",

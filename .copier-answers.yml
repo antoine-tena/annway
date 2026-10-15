@@ -1,5 +1,5 @@
 # Réponses de kiln : ne pas modifier à la main, `kiln update` s'en sert.
-_commit: c739b8f
+_commit: 8e6427b
 _src_path: https://github.com/antoine-tena/kiln.git
 backend: java
 boussole: annway en service
