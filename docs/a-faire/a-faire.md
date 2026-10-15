@@ -47,18 +47,6 @@ Ce qu'il faut faire, pourquoi, où regarder.
 
 ## 🟠 Important
 
-### AF-02 · Fabrique de matériel (Simple Factory)
-- **État** : à faire
-- **Effort** : S · **Qui** : Nathan · **Échéance** : —
-- **Origine** : `REPARTITION.md` partie 3 · `DiagrammeClasses.md`
-
-À faire en premier : ne dépend d'aucun autre module, et `Reservation` (Antoine) en a besoin.
-- [ ] `Materiel` (abstraite, `description`, `getEncombrement()`), `Ski`, `Snowboard`, `Luge`
-- [ ] `TypeMateriel` (énumération `SKI`, `SNOWBOARD`, `LUGE`)
-- [ ] `MaterielFactory.creerMateriel(TypeMateriel, String)`
-- [ ] Encombrements en constantes nommées ([ZERO-MAGIE]), pas en littéraux
-- [ ] Tests JUnit : un objet du bon type par valeur de `TypeMateriel`, encombrement attendu
-
 ### AF-03 · Filtres de recherche (Stratégie)
 - **État** : bloqué — attend `Trajet` (Antoine, partie 2)
 - **Effort** : S · **Qui** : Nathan · **Échéance** : —
@@ -97,3 +85,5 @@ Ce qu'il faut faire, pourquoi, où regarder.
 
 Une ligne par entrée terminée, la plus récente en tête :
 `- **AAAA-MM-JJ** · AF-NN · Titre — ce qui a été fait (branche)`.
+
+- **2026-10-15** · AF-02 · Fabrique de matériel (Simple Factory) — `Equipment`, `Ski`, `Snowboard`, `Sled`, `EquipmentType`, `EquipmentFactory` et leurs tests, dans `fr.annway.equipment` (feat/fabrique-materiel)
