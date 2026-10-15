@@ -66,6 +66,11 @@ public abstract sealed class User permits Passenger, Driver {
         return review;
     }
 
+    /** Envoie un message sur l'annonce du trajet `tripId`. */
+    public Message sendMessage(int tripId, String content, Clock clock) {
+        return Message.send(this, tripId, content, clock);
+    }
+
     public List<Review> receivedReviews() {
         return List.copyOf(receivedReviews);
     }

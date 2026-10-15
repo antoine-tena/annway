@@ -11,7 +11,9 @@ public enum AccountError {
     INVALID_RATING("La note doit être comprise entre 1 et 5."),
     SELF_REVIEW("On ne peut pas laisser un avis sur soi-même."),
     REVIEW_ALREADY_ANSWERED("Cet avis a déjà reçu une réponse."),
-    REPLY_BY_NON_TARGET("Seule la personne évaluée peut répondre à cet avis.");
+    REPLY_BY_NON_TARGET("Seule la personne évaluée peut répondre à cet avis."),
+    INVALID_TRIP_ID("L'annonce visée n'existe pas."),
+    MESSAGE_TOO_LONG("Le message dépasse 1000 caractères.");
 
     private final String userMessage;
 
