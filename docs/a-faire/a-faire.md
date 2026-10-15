@@ -20,7 +20,7 @@ La boussole est **annway en service**.
     Pourquoi, ce qu'il faut faire (en liste à cocher `- [ ]` s'il y a plusieurs étapes), où regarder.
 
 - **Identifiant** `AF-NN` : stable, jamais réattribué, cité tel quel dans les commits et les
-  branches. **Prochain libre : AF-02.**
+  branches. **Prochain libre : AF-05.**
 - **L'état** prend une seule valeur parmi : `à faire` ; `en cours — branche <nom>, depuis le
   JJ mois` ; `bloqué — attend <qui ou quoi>` ; `à vérifier — <où>`.
 - **Criticité** = la section où vit l'entrée ; en changer, c'est déplacer l'entrée.
@@ -46,6 +46,44 @@ La boussole est **annway en service**.
 Ce qu'il faut faire, pourquoi, où regarder.
 
 ## 🟠 Important
+
+### AF-02 · Fabrique de matériel (Simple Factory)
+- **État** : à faire
+- **Effort** : S · **Qui** : Nathan · **Échéance** : —
+- **Origine** : `REPARTITION.md` partie 3 · `DiagrammeClasses.md`
+
+À faire en premier : ne dépend d'aucun autre module, et `Reservation` (Antoine) en a besoin.
+- [ ] `Materiel` (abstraite, `description`, `getEncombrement()`), `Ski`, `Snowboard`, `Luge`
+- [ ] `TypeMateriel` (énumération `SKI`, `SNOWBOARD`, `LUGE`)
+- [ ] `MaterielFactory.creerMateriel(TypeMateriel, String)`
+- [ ] Encombrements en constantes nommées ([ZERO-MAGIE]), pas en littéraux
+- [ ] Tests JUnit : un objet du bon type par valeur de `TypeMateriel`, encombrement attendu
+
+### AF-03 · Filtres de recherche (Stratégie)
+- **État** : bloqué — attend `Trajet` (Antoine, partie 2)
+- **Effort** : S · **Qui** : Nathan · **Échéance** : —
+- **Origine** : `REPARTITION.md` partie 3 · `DiagrammeClasses.md`
+
+- [ ] `StrategieFiltre` (interface, `filtrer(List<Trajet>)`), `FiltreParPrix`,
+  `FiltreParHoraire`, `SansFiltre`
+- [ ] `FiltreParPrix` en centimes entiers (`maxPriceCents`), pas en `double` comme dans le
+  diagramme ([ARGENT]) ; prix d'un `TrajetPolytech` (don libre) à convenir avec Antoine
+- [ ] Bornes horaires en `Europe/Paris` ([FUSEAU])
+- [ ] Tests par exemples, et par propriétés (`jqwik`) : un filtre ne rend jamais plus de
+  trajets qu'il n'en reçoit ([TESTS-PROPRIETES], dépendance à décider en équipe)
+
+### AF-04 · Catalogue et alertes de trajets (Observateur)
+- **État** : bloqué — attend `Trajet`, `CritereRecherche` (Antoine) et `Passager` (Pavlo)
+- **Effort** : M · **Qui** : Nathan · **Échéance** : —
+- **Origine** : `REPARTITION.md` partie 3 · `DiagrammeClasses.md`
+
+À faire après AF-03 : le catalogue utilise une `StrategieFiltre`.
+- [ ] `SujetTrajets` et `ObservateurTrajet` (interfaces)
+- [ ] `CatalogueTrajets` : `ajouterTrajet` notifie les observateurs, `rechercher`,
+  `setStrategie`
+- [ ] `AlerteTrajet` : prévient son `Passager` quand un trajet répond à son `CritereRecherche`
+  (et seulement si elle est active)
+- [ ] Tests : abonnement, désabonnement, alerte inactive non prévenue
 
 ## 🟡 Normal
 
