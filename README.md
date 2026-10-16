@@ -7,7 +7,7 @@ Covoiturage pour les sorties annski : proposer un trajet vers la station, réser
 Après le clone, depuis la racine du dépôt (prérequis : [uv](https://docs.astral.sh/uv/), un JDK 25 et `unzip`) :
 
 ```sh
-uv tool install git+https://github.com/antoine-tena/kiln   # une fois par poste
+uv tool install kiln-cli   # une fois par poste
 kiln install
 ```
 
