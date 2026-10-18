@@ -22,7 +22,7 @@ North star: **annway en service**.
     Why, what to do (as a `- [ ]` checklist when there are several steps), where to look.
 
 - **ID** `T-NN`: stable, never reused, quoted as is in commits and branches.
-  **Next free: T-02.**
+  **Next free: T-04.**
 - **Type**, one of: `bug` (something is broken); `improvement` (it works, it could work
   better); `idea` (nothing exists yet, to be explored); `task` (work that is neither: a release,
   a decision, a check).
@@ -54,6 +54,34 @@ What to do, why, where to look.
 
 ## 🟠 Important
 
+### T-02 · Search filters (Strategy pattern)
+- **Type**: task
+- **Status**: blocked — waiting for `Trip` (Antoine, part 2)
+- **Opened**: 2026-10-15
+- **Effort**: S · **Owner**: Nathan · **Due**: —
+- **Origin**: `REPARTITION.md` part 3 · `DiagrammeClasses.md` · was AF-03
+
+- [ ] `TripFilter` strategy interface (`filter(List<Trip>)`), price filter, time-window filter,
+  no-op filter
+- [ ] Price filter in integer cents (`maxPriceCents`), not the `double` of the diagram
+  ([ARGENT]); price of a Polytech trip (free donation) to agree on with Antoine
+- [ ] Time bounds computed in `Europe/Paris` ([FUSEAU])
+- [ ] Example tests, plus property tests (`jqwik`): a filter never returns more trips than it
+  receives ([TESTS-PROPRIETES], dependency to decide as a team)
+
+### T-03 · Trip catalogue and alerts (Observer pattern)
+- **Type**: task
+- **Status**: blocked — waiting for `Trip` and `SearchCriteria` (Antoine, part 2)
+- **Opened**: 2026-10-15
+- **Effort**: M · **Owner**: Nathan · **Due**: —
+- **Origin**: `REPARTITION.md` part 3 · `DiagrammeClasses.md` · was AF-04
+
+After T-02: the catalogue uses a `TripFilter`. `Passenger` (Pavlo) is already in `develop`.
+- [ ] Subject and observer interfaces (subscribe, unsubscribe, notify / update)
+- [ ] `TripCatalogue`: adding a trip notifies observers, search, filter strategy setter
+- [ ] `TripAlert`: tells its `Passenger` when a trip matches its criteria, only while active
+- [ ] Tests: subscribe, unsubscribe, inactive alert not notified
+
 ## 🟡 Normal
 
 ## ⚪ Background — long-running work, debt and ideas
@@ -66,3 +94,5 @@ What to do, why, where to look.
 
 One line per closed ticket, most recent first:
 `- **YYYY-MM-DD** · T-NN · Title — what was done (branch) · opened YYYY-MM-DD`.
+
+- **2026-10-15** · AF-02 · Equipment factory (Simple Factory) — `Equipment`, `Ski`, `Snowboard`, `Sled`, `EquipmentType`, `EquipmentFactory` and their tests, in `fr.annway.equipment` (feat/fabrique-materiel) · opened 2026-10-15
