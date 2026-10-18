@@ -69,6 +69,15 @@ What to do, why, where to look.
 - [ ] Example tests, plus property tests (`jqwik`): a filter never returns more trips than it
   receives ([TESTS-PROPRIETES], dependency to decide as a team)
 
+Use case « Filtrer les résultats (prix, horaire) », an optional extension of « Rechercher un
+trajet »: without a filter the search returns everything. Scenarios to test:
+- [ ] No filter: every trip received comes back, in the same order
+- [ ] Price: keeps the trips whose amount due for one seat is at most `maxPriceCents`, bound
+  included; a Polytech trip (donation, nothing due) is always kept
+- [ ] Time window: keeps the trips leaving between `earliest` and `latest`, Paris local time,
+  bounds included; a window with `earliest` after `latest` is refused (business error)
+- [ ] Every filter: empty list in, empty list out; never adds a trip; keeps the order
+
 ### T-03 · Trip catalogue and alerts (Observer pattern)
 - **Type**: task
 - **Status**: blocked — waiting for `Trip` and `SearchCriteria` (Antoine, part 2)
@@ -81,6 +90,24 @@ After T-02: the catalogue uses a `TripFilter`. `Passenger` (Pavlo) is already in
 - [ ] `TripCatalogue`: adding a trip notifies observers, search, filter strategy setter
 - [ ] `TripAlert`: tells its `Passenger` when a trip matches its criteria, only while active
 - [ ] Tests: subscribe, unsubscribe, inactive alert not notified
+
+Use cases « Rechercher un trajet » (includes « Saisir critère du voyage »: departure, arrival,
+date, passengers) and « S'abonner alerte trajet ». Scenarios to test:
+- [ ] Search: returns the trips that match the criteria (`Trip` matching, Antoine), then applies
+  the current filter; changing the filter changes the next results
+- [ ] Adding a trip notifies every subscribed observer once, with that trip
+- [ ] An observer unsubscribed is no longer notified; subscribing twice notifies once
+- [ ] Active alert + matching trip: the passenger is warned; non-matching trip or inactive
+  alert: not warned; an alert can be switched off
+
+Open questions, not answered by either diagram:
+- [ ] How the passenger is warned: no class carries the notification. Proposal: the alert
+  keeps the matching trips (`matchedTrips()`), the display comes later
+- [ ] Who adds a published trip to the catalogue: « Publier un trajet » is `Driver` (Pavlo),
+  the catalogue is mine; a service between them, rather than `Driver` knowing the catalogue
+  ([COUCHES]), to agree with Pavlo
+- [ ] Full, finished or cancelled trips: out of search and alerts? Probably in `Trip` matching
+  (Antoine)
 
 ## 🟡 Normal
 
