@@ -35,8 +35,10 @@ réservations, paiement tiers via l'adaptateur.
 
 Dans le code (paquet `fr.annway.trip`, en anglais) : `Trip`, `StationTrip`, `PolytechTrip`,
 `TripType`, `TripRoute` (identifiant, départ, arrivée, instant de départ), `Stop`, `TripStatus`,
-`SearchCriteria`. Erreurs métier : `TripError` (énumération), `TripException`. Données de test :
-`TripFixtures`.
+`SearchCriteria`, `TripRequest`, `Reservation`, `ReservationStatus`, `Payment`, `PaymentType`.
+Erreurs métier : `TripError` (énumération), `TripException`. Données de test : `TripFixtures`.
+Adaptateur (paquet `fr.annway.payment`) : `PaymentService`, `ExternalPaymentAdapter`,
+`ExternalPaymentApi`.
 
 ## Partie 3 : Catalogue, recherche et patrons avancés (Nathan)
 

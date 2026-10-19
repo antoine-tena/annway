@@ -22,7 +22,7 @@ North star: **annway en service**.
     Why, what to do (as a `- [ ]` checklist when there are several steps), where to look.
 
 - **ID** `T-NN`: stable, never reused, quoted as is in commits and branches.
-  **Next free: T-05.**
+  **Next free: T-07.**
 - **Type**, one of: `bug` (something is broken); `improvement` (it works, it could work
   better); `idea` (nothing exists yet, to be explored); `task` (work that is neither: a release,
   a decision, a check).
@@ -109,22 +109,33 @@ Open questions, not answered by either diagram:
 - [x] Full, finished or cancelled trips: out of search and alerts — `Trip.matches` only
   accepts an `OPEN` trip
 
-### T-04 · Bookings and payment (part 2)
+### T-05 · Passenger and driver actions on trips (part 1)
 - **Type**: task
 - **Status**: todo
 - **Opened**: 2026-10-19
-- **Effort**: M · **Owner**: Antoine · **Due**: —
-- **Origin**: `REPARTITION.md` part 2 · `DiagrammeClasses.md`
+- **Effort**: S · **Owner**: Pavlo · **Due**: —
+- **Origin**: `DiagrammeClasses.md` · `REPARTITION.md` part 1
 
-`Trip`, `StationTrip`, `PolytechTrip`, `SearchCriteria` are in `fr.annway.trip` (unblocked T-02,
-T-03). What is left of part 2:
-- [ ] `Reservation`, `ReservationStatus`: seats and equipment taken from the trip, validate,
-  refuse, cancel; validation only if `!isPaymentRequired() || isPaid()`
-- [ ] `Payment`, `PaymentType` (`FIXED_PRICE`, `DONATION`), amounts in cents ([ARGENT])
-- [ ] Adapter: `PaymentService`, `ExternalPaymentAdapter`, `ExternalPaymentApi` (test double,
-  no network: [RESEAU])
-- [ ] `TripRequest` (a passenger's request, with its `SearchCriteria`)
-- [ ] Trip status `FULL` / `FINISHED`: set by bookings and by the clock
+The methods of the diagram on `Passenger` and `Driver` (Pavlo's classes) can now be written; each
+one only delegates to part 2 (`fr.annway.trip`):
+- [ ] `Passenger.book(trip, seatCount, equipment)` → `Reservation.request(…)`
+- [ ] `Passenger.createTripRequest(criteria)` → `TripRequest.create(…)`
+- [ ] `Driver.validateReservation(r)` / `refuseReservation(r)` → `r.validate(this)` / `r.refuse(this)`
+  (the reservation checks that this driver owns the trip)
+- [ ] `Driver.publishTrip(trip)`: who adds it to the catalogue is still open in T-03
+- [ ] `Passenger.searchTrip` / `subscribeAlert`: after T-03 (Nathan's catalogue)
+- [ ] `Message.tripId` may become a `Trip` now that the class exists (Pavlo's call)
+
+### T-06 · Refund when a paid booking is cancelled or refused
+- **Type**: idea
+- **Status**: todo
+- **Opened**: 2026-10-19
+- **Effort**: S · **Owner**: Antoine · **Due**: —
+- **Origin**: T-04
+
+`Reservation.cancel` gives the seats back but not the money; `PaymentService` has no refund.
+To decide as a team: refund a fixed price always, never a donation? Up to which delay before
+departure?
 
 ## 🟡 Normal
 
@@ -139,4 +150,5 @@ T-03). What is left of part 2:
 One line per closed ticket, most recent first:
 `- **YYYY-MM-DD** · T-NN · Title — what was done (branch) · opened YYYY-MM-DD`.
 
+- **2026-10-19** · T-04 · Bookings and payment (part 2) — `Reservation` (request, validate, refuse, cancel), `Payment` in cents, payment adapter, `TripRequest`, trip `FULL` and `FINISHED` (feat/reservations) · opened 2026-10-19
 - **2026-10-15** · AF-02 · Equipment factory (Simple Factory) — `Equipment`, `Ski`, `Snowboard`, `Sled`, `EquipmentType`, `EquipmentFactory` and their tests, in `fr.annway.equipment` (feat/fabrique-materiel) · opened 2026-10-15
