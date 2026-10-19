@@ -33,6 +33,11 @@ réservations, paiement tiers via l'adaptateur.
 - `Paiement`, `TypePaiement` (`PRIX_FIXE` ou `DON`)
 - Adaptateur : `ServicePaiement` (interface), `AdaptateurPaiementExterne`, `ApiPaiementExterne`
 
+Dans le code (paquet `fr.annway.trip`, en anglais) : `Trip`, `StationTrip`, `PolytechTrip`,
+`TripType`, `TripRoute` (identifiant, départ, arrivée, instant de départ), `Stop`, `TripStatus`,
+`SearchCriteria`. Erreurs métier : `TripError` (énumération), `TripException`. Données de test :
+`TripFixtures`.
+
 ## Partie 3 : Catalogue, recherche et patrons avancés (Nathan)
 
 Fabrique de matériel, catalogue et alertes de trajets, filtres de recherche interchangeables.
