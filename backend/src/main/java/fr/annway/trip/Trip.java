@@ -3,6 +3,7 @@ package fr.annway.trip;
 import fr.annway.account.Driver;
 import fr.annway.account.Vehicle;
 import fr.annway.equipment.Equipment;
+import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -97,10 +98,34 @@ public abstract sealed class Trip permits StationTrip, PolytechTrip {
     public boolean hasRoomFor(int seatCount, List<Equipment> equipment) {
         requirePositiveSeatCount(seatCount);
         Objects.requireNonNull(equipment, "equipment");
-        var bulk = equipment.stream().mapToInt(Equipment::bulk).sum();
+        return hasRoomFor(seatCount, equipment.stream().mapToInt(Equipment::bulk).sum());
+    }
+
+    private boolean hasRoomFor(int seatCount, int bulk) {
         return status == TripStatus.OPEN
                 && seatCount <= availableSeats
                 && bulk <= remainingEquipmentCapacity;
+    }
+
+    /** Prend les places et l'encombrement d'une réservation validée ; complet s'il ne reste rien. */
+    void takeSeats(int seatCount, int bulk) {
+        if (!hasRoomFor(seatCount, bulk)) {
+            throw new TripException(TripError.NO_ROOM);
+        }
+        availableSeats -= seatCount;
+        remainingEquipmentCapacity -= bulk;
+        if (availableSeats == 0) {
+            status = TripStatus.FULL;
+        }
+    }
+
+    /** Rend les places d'une réservation annulée ; un trajet complet redevient ouvert. */
+    void releaseSeats(int seatCount, int bulk) {
+        availableSeats += seatCount;
+        remainingEquipmentCapacity += bulk;
+        if (status == TripStatus.FULL) {
+            status = TripStatus.OPEN;
+        }
     }
 
     /**
@@ -120,7 +145,21 @@ public abstract sealed class Trip permits StationTrip, PolytechTrip {
 
     /** Annule le trajet : il sort des recherches et ne prend plus de réservation. */
     public void cancel() {
+        if (status == TripStatus.FINISHED) {
+            throw new TripException(TripError.TRIP_FINISHED);
+        }
         status = TripStatus.CANCELLED;
+    }
+
+    /** Clôt le trajet une fois l'heure de départ passée ; un trajet annulé le reste. */
+    public void finish(Clock clock) {
+        if (Objects.requireNonNull(clock, "clock").instant().isBefore(departureAt)) {
+            throw new TripException(TripError.TRIP_NOT_DEPARTED);
+        }
+        if (status == TripStatus.CANCELLED) {
+            throw new TripException(TripError.TRIP_CANCELLED);
+        }
+        status = TripStatus.FINISHED;
     }
 
     public abstract TripType type();
