@@ -22,7 +22,7 @@ North star: **annway en service**.
     Why, what to do (as a `- [ ]` checklist when there are several steps), where to look.
 
 - **ID** `T-NN`: stable, never reused, quoted as is in commits and branches.
-  **Next free: T-04.**
+  **Next free: T-05.**
 - **Type**, one of: `bug` (something is broken); `improvement` (it works, it could work
   better); `idea` (nothing exists yet, to be explored); `task` (work that is neither: a release,
   a decision, a check).
@@ -56,7 +56,7 @@ What to do, why, where to look.
 
 ### T-02 · Search filters (Strategy pattern)
 - **Type**: task
-- **Status**: blocked — waiting for `Trip` (Antoine, part 2)
+- **Status**: todo
 - **Opened**: 2026-10-15
 - **Effort**: S · **Owner**: Nathan · **Due**: —
 - **Origin**: `REPARTITION.md` part 3 · `DiagrammeClasses.md` · was AF-03
@@ -64,7 +64,7 @@ What to do, why, where to look.
 - [ ] `TripFilter` strategy interface (`filter(List<Trip>)`), price filter, time-window filter,
   no-op filter
 - [ ] Price filter in integer cents (`maxPriceCents`), not the `double` of the diagram
-  ([ARGENT]); price of a Polytech trip (free donation) to agree on with Antoine
+  ([ARGENT]): `Trip.amountDueCents(1)`, which is 0 for a Polytech trip (free donation)
 - [ ] Time bounds computed in `Europe/Paris` ([FUSEAU])
 - [ ] Example tests, plus property tests (`jqwik`): a filter never returns more trips than it
   receives ([TESTS-PROPRIETES], dependency to decide as a team)
@@ -80,7 +80,7 @@ trajet »: without a filter the search returns everything. Scenarios to test:
 
 ### T-03 · Trip catalogue and alerts (Observer pattern)
 - **Type**: task
-- **Status**: blocked — waiting for `Trip` and `SearchCriteria` (Antoine, part 2)
+- **Status**: todo
 - **Opened**: 2026-10-15
 - **Effort**: M · **Owner**: Nathan · **Due**: —
 - **Origin**: `REPARTITION.md` part 3 · `DiagrammeClasses.md` · was AF-04
@@ -106,8 +106,25 @@ Open questions, not answered by either diagram:
 - [ ] Who adds a published trip to the catalogue: « Publier un trajet » is `Driver` (Pavlo),
   the catalogue is mine; a service between them, rather than `Driver` knowing the catalogue
   ([COUCHES]), to agree with Pavlo
-- [ ] Full, finished or cancelled trips: out of search and alerts? Probably in `Trip` matching
-  (Antoine)
+- [x] Full, finished or cancelled trips: out of search and alerts — `Trip.matches` only
+  accepts an `OPEN` trip
+
+### T-04 · Bookings and payment (part 2)
+- **Type**: task
+- **Status**: todo
+- **Opened**: 2026-10-19
+- **Effort**: M · **Owner**: Antoine · **Due**: —
+- **Origin**: `REPARTITION.md` part 2 · `DiagrammeClasses.md`
+
+`Trip`, `StationTrip`, `PolytechTrip`, `SearchCriteria` are in `fr.annway.trip` (unblocked T-02,
+T-03). What is left of part 2:
+- [ ] `Reservation`, `ReservationStatus`: seats and equipment taken from the trip, validate,
+  refuse, cancel; validation only if `!isPaymentRequired() || isPaid()`
+- [ ] `Payment`, `PaymentType` (`FIXED_PRICE`, `DONATION`), amounts in cents ([ARGENT])
+- [ ] Adapter: `PaymentService`, `ExternalPaymentAdapter`, `ExternalPaymentApi` (test double,
+  no network: [RESEAU])
+- [ ] `TripRequest` (a passenger's request, with its `SearchCriteria`)
+- [ ] Trip status `FULL` / `FINISHED`: set by bookings and by the clock
 
 ## 🟡 Normal
 
