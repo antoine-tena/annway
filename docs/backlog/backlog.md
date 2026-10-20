@@ -52,15 +52,6 @@ North star: **annway en service**.
 
 ## 🔴 Critical
 
-### T-01 · Ticket title
-- **Type**: task
-- **Status**: todo
-- **Opened**: 2026-10-15
-- **Effort**: S · **Owner**: — · **Due**: —
-- **Origin**: —
-
-What to do, why, where to look.
-
 ## 🟠 Important
 
 ### T-06 · Refund when a paid booking is cancelled or refused
@@ -99,7 +90,7 @@ environment ([SECRETS]); with T-06 for refunds.
 
 ### T-11 · Strict CSP by nonce for the front
 - **Type**: task
-- **Status**: todo
+- **Status**: in progress — branch feat/t11-csp-nonce, since 2026-10-20
 - **Opened**: 2026-10-20
 - **Effort**: S · **Owner**: Antoine · **Due**: —
 - **Origin**: branch feat/front-nuxt
