@@ -1,5 +1,6 @@
 package fr.annway.search;
 
+import fr.annway.account.Driver;
 import fr.annway.trip.SearchCriteria;
 import fr.annway.trip.Trip;
 import java.util.ArrayList;
@@ -26,6 +27,22 @@ public final class TripCatalogue implements TripSubject {
     public void addTrip(Trip trip) {
         trips.add(Objects.requireNonNull(trip, "trip"));
         notifyObservers(trip);
+    }
+
+    /**
+     * Publie le trajet d'un conducteur : seul son conducteur le publie, une seule fois. Les abonnés
+     * en sont prévenus comme pour {@link #addTrip}.
+     */
+    public void publish(Driver driver, Trip trip) {
+        Objects.requireNonNull(driver, "driver");
+        Objects.requireNonNull(trip, "trip");
+        if (driver.id() != trip.driver().id()) {
+            throw new SearchException(SearchError.NOT_TRIP_DRIVER);
+        }
+        if (trips.stream().anyMatch(published -> published.id() == trip.id())) {
+            throw new SearchException(SearchError.TRIP_ALREADY_PUBLISHED);
+        }
+        addTrip(trip);
     }
 
     /** Change le filtre appliqué aux recherches suivantes. */

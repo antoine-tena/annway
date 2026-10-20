@@ -3,7 +3,9 @@ package fr.annway.search;
 /** Erreurs métier de la recherche de trajets : un code machine et un message pour l'utilisateur. */
 public enum SearchError {
     NEGATIVE_MAX_PRICE("Le prix maximum ne peut pas être négatif."),
-    INVERTED_TIME_WINDOW("L'heure de début de la plage horaire est après l'heure de fin.");
+    INVERTED_TIME_WINDOW("L'heure de début de la plage horaire est après l'heure de fin."),
+    NOT_TRIP_DRIVER("Seul le conducteur du trajet peut le publier."),
+    TRIP_ALREADY_PUBLISHED("Ce trajet est déjà publié.");
 
     private final String userMessage;
 

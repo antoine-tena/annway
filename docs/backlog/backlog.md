@@ -63,17 +63,6 @@ What to do, why, where to look.
 
 ## 🟠 Important
 
-### T-08 · Who adds a published trip to the catalogue
-- **Type**: task
-- **Status**: blocked — waiting for an agreement with Pavlo
-- **Opened**: 2026-10-20
-- **Effort**: XS · **Owner**: Nathan · **Due**: —
-- **Origin**: T-03
-
-« Publier un trajet » is `Driver` (Pavlo), `TripCatalogue.addTrip` is mine. Proposal: a service
-between them, rather than `Driver` knowing the catalogue ([LAYERS]). Once agreed, `Passenger`
-search and alert subscription (T-05) can rely on it.
-
 ### T-05 · Passenger and driver actions on trips (part 1)
 - **Type**: task
 - **Status**: todo
@@ -87,8 +76,10 @@ one only delegates to part 2 (`fr.annway.trip`):
 - [ ] `Passenger.createTripRequest(criteria)` → `TripRequest.create(…)`
 - [ ] `Driver.validateReservation(r)` / `refuseReservation(r)` → `r.validate(this)` / `r.refuse(this)`
   (the reservation checks that this driver owns the trip)
-- [ ] `Driver.publishTrip(trip)`: who adds it to the catalogue is still open in T-08
-- [ ] `Passenger.searchTrip` / `subscribeAlert`: after T-03 (Nathan's catalogue)
+- [ ] `Driver.publishTrip(trip, catalogue)` → `catalogue.publish(this, trip)` (`TripCatalogue`, Nathan:
+  checks the driver, refuses a trip published twice, warns the alerts)
+- [ ] `Passenger.searchTrip` / `subscribeAlert` → `catalogue.search(criteria)` /
+  `catalogue.subscribe(new TripAlert(this, criteria))`
 - [ ] `Message.tripId` may become a `Trip` now that the class exists (Pavlo's call)
 
 ### T-06 · Refund when a paid booking is cancelled or refused
@@ -126,6 +117,7 @@ same invariants on generated lists.
 One line per closed ticket, most recent first:
 `- **YYYY-MM-DD** · T-NN · Title — what was done (branch) · opened YYYY-MM-DD`.
 
+- **2026-10-20** · T-08 · Who adds a published trip to the catalogue — `TripCatalogue.publish(driver, trip)`: only the trip's driver, once, alerts warned; `Driver.publishTrip` can delegate to it (T-05) (feat/publication-catalogue) · opened 2026-10-20
 - **2026-10-20** · T-03 · Trip catalogue and alerts (Observer pattern) — `TripSubject`, `TripObserver`, `TripCatalogue` (search then filter, notifies on add), `TripAlert` (keeps `matchedTrips()` while active) and their tests; publishing link in T-08 (feat/catalogue-alertes) · opened 2026-10-15
 - **2026-10-20** · T-02 · Search filters (Strategy pattern) — `TripFilter`, `PriceFilter` in cents, `TimeWindowFilter` in Paris time, `NoFilter`, `SearchException`, example tests; property tests in T-07 (feat/filtres-recherche) · opened 2026-10-15
 - **2026-10-19** · T-04 · Bookings and payment (part 2) — `Reservation` (request, validate, refuse, cancel), `Payment` in cents, payment adapter, `TripRequest`, trip `FULL` and `FINISHED` (feat/reservations) · opened 2026-10-19
