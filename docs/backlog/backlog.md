@@ -132,17 +132,6 @@ Paris time, criteria), a Playwright journey "book, pay, validate" against the fu
 them (only the demo data). To decide as a team: link sent by email, code by SMS, ID checked by
 whom?
 
-### T-07 · Property tests of the search filters
-- **Type**: task
-- **Status**: blocked — waiting for the team's decision on `jqwik` ([NEW-DEPENDENCY])
-- **Opened**: 2026-10-20
-- **Effort**: XS · **Owner**: Nathan · **Due**: —
-- **Origin**: T-02
-
-[PROPERTY-TESTS]: a filter never returns more trips than it receives, never adds one and keeps
-the order. Today `TripFilterContractTest` checks it on examples; once `jqwik` is accepted, the
-same invariants on generated lists.
-
 ## ⚪ Background — long-running work, debt and ideas
 
 ---
@@ -154,6 +143,7 @@ same invariants on generated lists.
 One line per closed ticket, most recent first:
 `- **YYYY-MM-DD** · T-NN · Title — what was done (branch) · opened YYYY-MM-DD`.
 
+- **2026-10-20** · T-07 · Property tests of the search filters — `TripFilterPropertiesTest`: the filter contract (never more trips, none added, order kept) on 1000 generated lists; `jqwik` 1.10.2 accepted by the team, runs on JUnit 6 (test/jqwik-junit6) · opened 2026-10-20
 - **2026-10-20** · T-14 · `kiln dev` starts the Java API — fixed in kiln (v0.4.1-rc.2): the jar runs next to the front with `backend/.env`; annway's jar starts `fr.annway.web.WebMain` (fix/dev-api) · opened 2026-10-20
 - **2026-10-20** · T-05 · Passenger and driver actions on trips (part 1) — `Passenger.searchTrip`, `book`, `createTripRequest`, `subscribeAlert`; `Driver.publishTrip`, `validateReservation`, `refuseReservation`, each delegating to the trip and catalogue classes; `Message` now refers to its `Trip` (feat/actions-trajets) · opened 2026-10-19
 - **2026-10-20** · T-08 · Who adds a published trip to the catalogue — `TripCatalogue.publish(driver, trip)`: only the trip's driver, once, alerts warned; `Driver.publishTrip` can delegate to it (T-05) (feat/publication-catalogue) · opened 2026-10-20
