@@ -1,25 +1,25 @@
 name: CI
 
 # The reusable workflows live in kiln (antoine-tena/kiln, public), cited at the kiln release the
-# project comes from (v0.4.0): `kiln update` moves them to the next one. The project only
+# project comes from (v0.4.1-rc.1): `kiln update` moves them to the next one. The project only
 # keeps its parameters here.
 on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main, develop ]
+  # The CI of each push runs on the machine (`kiln ci`, verdict kept as a git note): no GitHub
+  # minutes. On GitHub, by hand: Actions, CI, Run workflow. Back on each push:
+  # `kiln set ci_runner=github`.
+  workflow_dispatch:
   # Replayed by deploy.yml before any production release.
   workflow_call:
 
 jobs:
   backend:
-    uses: antoine-tena/kiln/.github/workflows/maven.yml@v0.4.0
+    uses: antoine-tena/kiln/.github/workflows/maven.yml@v0.4.1-rc.1
     with:
       directory: backend
 
   charter:
-    uses: antoine-tena/kiln/.github/workflows/charter.yml@v0.4.0
+    uses: antoine-tena/kiln/.github/workflows/charter.yml@v0.4.1-rc.1
 
   # [SECRETS]: gitleaks searches the whole history, with no organisation licence.
   secrets-scan:
-    uses: antoine-tena/kiln/.github/workflows/secrets.yml@v0.4.0
+    uses: antoine-tena/kiln/.github/workflows/secrets.yml@v0.4.1-rc.1
