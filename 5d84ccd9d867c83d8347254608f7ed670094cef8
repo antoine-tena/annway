@@ -1,7 +1,7 @@
-kiln ci: failure
+kiln ci: success
 commit: 5d84ccd9d867c83d8347254608f7ed670094cef8
-date: 2026-10-20T19:16:21+02:00
+date: 2026-10-20T19:18:11+02:00
 machine: DESKTOP-93QNEIL
-duration: 0 min 00 s
-jobs replayed: charter ok, secrets-scan FAILED (gitleaks (whole history))
+duration: 0 min 02 s
+jobs replayed: charter ok, secrets-scan ok
 not replayed: backend (workflow maven not replayed locally yet)
