@@ -40,18 +40,17 @@ risque.
 
 ## Lancer le projet
 
-Deux terminaux. D'abord l'API Java (http://localhost:8080) :
-
 ```sh
-cd backend && ./mvnw -q package -DskipTests
-ANNWAY_DEMO_PASSWORD='un-mot-de-passe-de-demo' java -cp target/annway-0.1.0.jar fr.annway.web.WebMain
+kiln dev
 ```
 
-Puis le front (`kiln dev`, ou `cd frontend && pnpm dev`) sur http://localhost:3000 : il sert
-l'API sous `/api/` par mandataire, si bien que le cookie de session suit sans CORS.
+Lance l'API Java (son jar, reconstruit à chaque lancement, sur http://localhost:8080) et le front
+sur http://localhost:3000, qui sert l'API sous `/api/` par mandataire : le cookie de session suit
+sans CORS. Les réglages locaux de l'API sont dans `backend/.env` (ignoré par git), à créer depuis
+`backend/.env.example` :
 
 - `ANNWAY_PORT` : port de l'API (8080 par défaut).
-- `ANNWAY_DEMO_PASSWORD` : facultatif ; donne ce mot de passe aux comptes de démonstration,
+- `ANNWAY_DEMO_PASSWORD` : facultatif, propre à chaque poste ; donne ce mot de passe aux comptes de démonstration,
   fictifs (`camille@example.org` et `hugo@example.org`, conducteurs ; `lea@example.org` et
   `malo@example.org`, passagers). Sans lui, on crée son compte depuis « Inscription ».
 - `ANNWAY_API_ORIGIN` (front) : origine de l'API, `http://localhost:8080` par défaut.

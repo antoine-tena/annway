@@ -21,7 +21,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Reproducible builds: a fixed date in the archives produced. -->
     <project.build.outputTimestamp>2026-01-01T00:00:00Z</project.build.outputTimestamp>
-    <main.class>fr.annway.Main</main.class>
+    <!-- The jar starts the HTTP API, which `kiln dev` runs next to the front. -->
+    <main.class>fr.annway.web.WebMain</main.class>
     <!-- Minimum line coverage (0.80 = 80 %), like kiln's Python projects. -->
     <coverage.minimum>0.80</coverage.minimum>
 
