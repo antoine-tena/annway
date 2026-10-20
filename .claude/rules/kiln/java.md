@@ -11,7 +11,8 @@ through the wrapper `./mvnw` (nothing to install: it downloads the version pinne
 
 - Check: `./mvnw verify` in `backend/` (compilation with blocking warnings, JUnit tests, JaCoCo
   coverage floor), or `kiln check` at the root.
-- Run: `./mvnw -q package -DskipTests && java -jar target/annway-0.1.0.jar`.
+- Run: `./mvnw -q package -DskipTests && java -jar target/annway-0.1.0.jar`; `kiln dev` does
+  it next to the front, with the variables of `backend/.env`.
 - Sources in `src/main/java`, tests in `src/test/java`, root package `fr.annway`, one
   package per domain (`fr.annway.<domain>`).
 

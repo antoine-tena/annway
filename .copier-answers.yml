@@ -1,5 +1,5 @@
 # kiln's answers for this project: never edit by hand, `kiln set` changes them.
-_commit: v0.4.1-rc.1
+_commit: v0.4.1-rc.2
 _src_path: https://github.com/antoine-tena/kiln.git
 backend: java
 ci_runner: local
