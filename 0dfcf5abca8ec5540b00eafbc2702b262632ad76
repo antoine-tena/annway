@@ -1,0 +1,7 @@
+kiln ci: failure
+commit: 0dfcf5abca8ec5540b00eafbc2702b262632ad76
+date: 2026-10-20T19:58:09+02:00
+machine: Host-003.lan
+duration: 0 min 00 s
+jobs replayed: charter ok, secrets-scan FAILED (gitleaks (whole history))
+not replayed: backend (workflow maven not replayed locally yet)
