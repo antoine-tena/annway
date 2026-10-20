@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import AccountReviews from '~/components/account/AccountReviews.vue'
+import AccountVerification from '~/components/account/AccountVerification.vue'
 import AccountVehicleFields from '~/components/account/AccountVehicleFields.vue'
 import UiButton from '~/components/ui/UiButton.vue'
 import UiMessage from '~/components/ui/UiMessage.vue'
@@ -57,6 +58,10 @@ const VERIFICATIONS = [
   { key: 'phone', label: 'Téléphone' },
   { key: 'identityDocument', label: 'Pièce d\'identité' },
 ] as const
+const CODE_CHANNELS = [
+  { key: 'email', label: 'E-mail' },
+  { key: 'phone', label: 'Téléphone' },
+] as const
 </script>
 
 <template>
@@ -99,6 +104,18 @@ const VERIFICATIONS = [
             />
           </li>
         </ul>
+        <template
+          v-for="channel in CODE_CHANNELS"
+          :key="channel.key"
+        >
+          <AccountVerification
+            v-if="!me.verifications[channel.key]"
+            :channel="channel.key"
+            :label="channel.label"
+            @verified="updated => { me = updated; success = `${channel.label} vérifié.` }"
+            @failed="message => (error = message)"
+          />
+        </template>
         <form
           class="space-y-3"
           @submit.prevent="save('bio', () => account.updateBio(bio), 'Présentation enregistrée.')"
