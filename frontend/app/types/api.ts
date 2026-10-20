@@ -131,3 +131,10 @@ export interface EquipmentTypeInfo {
   type: EquipmentType
   bulk: number
 }
+
+export type VerificationChannel = 'email' | 'phone'
+
+/** Aucun envoi d'e-mail ni de SMS n'est branché : l'API renvoie le code, pour la démo. */
+export interface VerificationCodeSent {
+  demoCode: string
+}

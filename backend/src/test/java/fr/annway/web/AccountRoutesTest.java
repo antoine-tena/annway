@@ -50,6 +50,16 @@ class AccountRoutesTest {
     }
 
     @Test
+    void emailIsVerifiedWithTheCodeSent() {
+        var sent = body(web.post("/api/me/verifications/email", passenger, ""));
+        var code = sent.replaceAll(".*\"demoCode\":\"(\\d+)\".*", "$1");
+        var wrong = web.post("/api/me/verifications/email/confirm", passenger, "code=x");
+        assertTrue(body(wrong).contains("INVALID_VERIFICATION_CODE"));
+        var confirmed = web.post("/api/me/verifications/email/confirm", passenger, "code=" + code);
+        assertTrue(body(confirmed).contains("\"email\":true"), body(confirmed));
+    }
+
+    @Test
     void ratingOutOfRangeIsADomainError() {
         var response = web.post("/api/users/" + driverId + "/reviews", passenger, "rating=6");
         assertEquals(HttpStatus.UNPROCESSABLE, response.status());

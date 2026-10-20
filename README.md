@@ -70,7 +70,7 @@ elle ne l'est pas. Le prestataire de paiement est celui de démonstration (`Demo
 
 | Domaine | Routes |
 | --- | --- |
-| Comptes | `POST /api/auth/register`, `/login`, `/logout` ; `GET /api/me` ; `POST /api/me/profile`, `/api/me/vehicles`, `/api/me/reviews/{index}/reply` ; `GET /api/users/{id}`, `POST /api/users/{id}/reviews` |
+| Comptes | `POST /api/auth/register`, `/login`, `/logout` ; `GET /api/me` ; `POST /api/me/profile`, `/api/me/verifications/{email|phone}` (code à usage unique, renvoyé dans la réponse faute d'envoi branché), `…/confirm`, `/api/me/vehicles`, `/api/me/reviews/{index}/reply` ; `GET /api/users/{id}`, `POST /api/users/{id}/reviews` |
 | Trajets | `GET /api/trips` (recherche et filtres), `/api/trips/{id}`, `/api/me/trips` ; `POST /api/trips`, `/api/trips/{id}/stops`, `/cancel`, `/finish` |
 | Réservations | `POST /api/trips/{id}/reservations` ; `GET /api/me/reservations` ; `POST /api/reservations/{id}/pay`, `/cancel`, `/validate`, `/refuse` |
 | Alertes et demandes | `GET`/`POST /api/me/alerts`, `POST /api/me/alerts/{index}/toggle` ; `GET`/`POST /api/me/trip-requests` ; `GET /api/trip-requests` |
