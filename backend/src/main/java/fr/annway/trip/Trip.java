@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * Trajet publié par un conducteur avec l'un de ses véhicules. Les places et la capacité de
  * matériel disponibles partent de celles du véhicule. Le départ est un instant UTC ; le jour du
- * départ se lit dans le calendrier de Paris ([FUSEAU]).
+ * départ se lit dans le calendrier de Paris ([TIME-ZONE]).
  */
 public abstract sealed class Trip permits StationTrip, PolytechTrip {
 
@@ -167,7 +167,7 @@ public abstract sealed class Trip permits StationTrip, PolytechTrip {
     /** Vrai si le passager doit payer pour que sa réservation soit validée. */
     public abstract boolean isPaymentRequired();
 
-    /** Montant dû pour `seatCount` places, en centimes ([ARGENT]) ; 0 quand le don est libre. */
+    /** Montant dû pour `seatCount` places, en centimes ([MONEY]) ; 0 quand le don est libre. */
     public abstract long amountDueCents(int seatCount);
 
     static void requirePositiveSeatCount(int seatCount) {

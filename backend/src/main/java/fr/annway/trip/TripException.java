@@ -2,7 +2,7 @@ package fr.annway.trip;
 
 import java.util.Objects;
 
-/** Erreur métier du domaine des trajets ([ERREURS-METIER]) : code machine et message en français. */
+/** Erreur métier du domaine des trajets ([DOMAIN-ERRORS]) : code machine et message en français. */
 public final class TripException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
