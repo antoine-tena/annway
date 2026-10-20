@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * Message envoyé à propos d'une annonce de trajet. L'annonce est désignée par l'identifiant du
  * trajet, pour ne pas dépendre de la classe des trajets ([PROPRIETAIRE-CLASSE]). L'instant
- * d'envoi est en UTC ([FUSEAU]). Créé par {@link User#sendMessage}.
+ * d'envoi est en UTC ([TIME-ZONE]). Créé par {@link User#sendMessage}.
  */
 public record Message(User sender, int tripId, String content, Instant sentAt) {
 
