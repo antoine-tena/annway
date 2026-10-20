@@ -9,7 +9,9 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "nuxt typecheck",
+    "test": "vitest run",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@fontsource/barlow-condensed": "5.3.0",
@@ -21,10 +23,13 @@
     "vue-router": "5.4.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@nuxt/eslint": "1.17.0",
+    "@playwright/test": "1.64.1",
     "@types/node": "^24.19.2",
     "eslint": "10.13.0",
     "typescript": "6.0.3",
+    "vitest": "5.0.5",
     "vue-tsc": "3.3.13"
   },
   "packageManager": "pnpm@12.8.1"
