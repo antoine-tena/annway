@@ -17,7 +17,8 @@ it holds; no copy of the code.
   `backend/src/test/java/`: JUnit tests; `backend/pom.xml`: Maven build.
 - `frontend/app/`: Nuxt front; `pages/` (one per screen), `components/` (`ui/`, `header/`,
   `trip/`, `account/`, `auth/`, `reservation/`), `composables/` (one per API domain),
-  `assets/css/tokens.css` (annski's theme in blue).
+  `assets/css/tokens.css` (annski's theme in blue); `frontend/server/`: Nitro plugin of the
+  security headers and the CSP by nonce.
 - `docs/backlog/`: the work to do; `charter.toml`: the checked rules; `.claude/rules/kiln/`:
   kiln's rules for Claude.
 
