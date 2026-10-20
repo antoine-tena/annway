@@ -1,0 +1,7 @@
+kiln ci: failure
+commit: 0ab0630b75980c5441d2f8ef9e7c58e15c42b197
+date: 2026-10-20T20:31:27+02:00
+machine: DESKTOP-93QNEIL
+duration: 0 min 26 s
+jobs replayed: frontend ok, charter ok, secrets-scan ok, security FAILED (pnpm audit)
+not replayed: backend (workflow maven not replayed locally yet)
