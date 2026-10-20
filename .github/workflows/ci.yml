@@ -1,38 +1,25 @@
 name: CI
 
-# Les workflows réutilisables vivent dans kiln (antoine-tena/kiln, public), cités à la version
-# de kiln dont part le projet (v0.3.3-rc.2) : `kiln update` les fait passer à la suivante. Le
-# projet ne garde ici que ses paramètres.
+# The reusable workflows live in kiln (antoine-tena/kiln, public), cited at the kiln release the
+# project comes from (v0.4.1-rc.1): `kiln update` moves them to the next one. The project only
+# keeps its parameters here.
 on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main, develop ]
-  # Rejouée par deploy.yml avant toute mise en production.
+  # The CI of each push runs on the machine (`kiln ci`, verdict kept as a git note): no GitHub
+  # minutes. On GitHub, by hand: Actions, CI, Run workflow. Back on each push:
+  # `kiln set ci_runner=github`.
+  workflow_dispatch:
+  # Replayed by deploy.yml before any production release.
   workflow_call:
 
 jobs:
   backend:
-    uses: antoine-tena/kiln/.github/workflows/maven.yml@v0.3.3-rc.2
+    uses: antoine-tena/kiln/.github/workflows/maven.yml@v0.4.1-rc.1
     with:
-      dossier: backend
+      directory: backend
 
-  charte:
-    uses: antoine-tena/kiln/.github/workflows/charte.yml@v0.3.3-rc.2
+  charter:
+    uses: antoine-tena/kiln/.github/workflows/charter.yml@v0.4.1-rc.1
 
+  # [SECRETS]: gitleaks searches the whole history, with no organisation licence.
   secrets-scan:
-    runs-on: ubuntu-latest
-    # Sur une PR, gitleaks lit la liste de ses commits par l'API.
-    permissions:
-      contents: read
-      pull-requests: read
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
-      # [SECRETS] : tout l'historique est fouillé, pas seulement le dernier commit.
-      - name: Rechercher des secrets (gitleaks)
-        uses: gitleaks/gitleaks-action@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    uses: antoine-tena/kiln/.github/workflows/secrets.yml@v0.4.1-rc.1
