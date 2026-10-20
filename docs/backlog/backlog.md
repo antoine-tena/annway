@@ -88,17 +88,6 @@ seats and payments, and the export and anonymisation of [PERSONAL-DATA].
 provider as a team, implement `ExternalPaymentApi` with its key in `.<service>/` and the
 environment ([SECRETS]); with T-06 for refunds.
 
-### T-11 · Strict CSP by nonce for the front
-- **Type**: task
-- **Status**: in progress — branch feat/t11-csp-nonce, since 2026-10-20
-- **Opened**: 2026-10-20
-- **Effort**: S · **Owner**: Antoine · **Due**: —
-- **Origin**: branch feat/front-nuxt
-
-The API sends its security headers (tested in `HttpEntryTest`), the Nuxt front does not yet:
-[CSP-NONCE] and [SECURITY-HEADERS] for the pages, through a Nitro plugin or `nuxt-security`
-(team decision for the second).
-
 ## 🟡 Normal
 
 ### T-12 · Front tests and end-to-end journeys
@@ -111,6 +100,8 @@ The API sends its security headers (tested in `HttpEntryTest`), the Nuxt front d
 [TEST-DENSITY], [E2E-JOURNEYS], [AUTOMATED-ACCESSIBILITY]: unit tests of `utils/` (cents,
 Paris time, criteria), a Playwright journey "book, pay, validate" against the full stack, an
 `axe-core` check of the main pages. The journey was played by hand on 2026-10-20.
+[SECURITY-HEADERS] also asks for a test of the front's headers and CSP
+(`frontend/server/utils/securityHeaders.ts`, checked by hand on the built front for T-11).
 
 ### T-13 · Profile verifications
 - **Type**: idea
@@ -134,6 +125,7 @@ whom?
 One line per closed ticket, most recent first:
 `- **YYYY-MM-DD** · T-NN · Title — what was done (branch) · opened YYYY-MM-DD`.
 
+- **2026-10-20** · T-11 · Strict CSP by nonce for the front — Nitro plugin `server/plugins/securityHeaders.ts`: the [SECURITY-HEADERS] on every response outside `/api/`, a CSP with no third-party origin and a nonce per page on the built front, checked in the browser; its automated test joins T-12 (feat/t11-csp-nonce) · opened 2026-10-20
 - **2026-10-20** · T-07 · Property tests of the search filters — `TripFilterPropertiesTest`: the filter contract (never more trips, none added, order kept) on 1000 generated lists; `jqwik` 1.10.2 accepted by the team, runs on JUnit 6 (test/jqwik-junit6) · opened 2026-10-20
 - **2026-10-20** · T-14 · `kiln dev` starts the Java API — fixed in kiln (v0.4.1-rc.2): the jar runs next to the front with `backend/.env`; annway's jar starts `fr.annway.web.WebMain` (fix/dev-api) · opened 2026-10-20
 - **2026-10-20** · T-05 · Passenger and driver actions on trips (part 1) — `Passenger.searchTrip`, `book`, `createTripRequest`, `subscribeAlert`; `Driver.publishTrip`, `validateReservation`, `refuseReservation`, each delegating to the trip and catalogue classes; `Message` now refers to its `Trip` (feat/actions-trajets) · opened 2026-10-19
