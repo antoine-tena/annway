@@ -22,7 +22,7 @@ Puis ouvrir http://localhost:3000.
 
 ## Organisation
 
-- `backend/` : le backend Java 25 (Maven, sans framework).
+- `backend/` : le backend Java 25 (Maven, sans framework) ; l'API web dans `fr.annway.web`.
 - `frontend/` : l'interface, en Nuxt 4 + Vue 3.
 - [`CLAUDE.md`](CLAUDE.md) et [`.claude/rules/kiln/`](.claude/rules/kiln/) : la charte du code
   et la façon de travailler, pour les humains comme pour les agents.
@@ -40,12 +40,48 @@ risque.
 
 ## Lancer le projet
 
+Deux terminaux. D'abord l'API Java (http://localhost:8080) :
+
 ```sh
-kiln dev
+cd backend && ./mvnw -q package -DskipTests
+ANNWAY_DEMO_PASSWORD='un-mot-de-passe-de-demo' java -cp target/annway-0.1.0.jar fr.annway.web.WebMain
 ```
 
-- Backend Java : `cd backend && ./mvnw verify`.
-- Frontend : http://localhost:3000.
+Puis le front (`kiln dev`, ou `cd frontend && pnpm dev`) sur http://localhost:3000 : il sert
+l'API sous `/api/` par mandataire, si bien que le cookie de session suit sans CORS.
+
+- `ANNWAY_PORT` : port de l'API (8080 par défaut).
+- `ANNWAY_DEMO_PASSWORD` : facultatif ; donne ce mot de passe aux comptes de démonstration,
+  fictifs (`camille@example.org` et `hugo@example.org`, conducteurs ; `lea@example.org` et
+  `malo@example.org`, passagers). Sans lui, on crée son compte depuis « Inscription ».
+- `ANNWAY_API_ORIGIN` (front) : origine de l'API, `http://localhost:8080` par défaut.
+- Les données vivent en mémoire : elles repartent de la démonstration à chaque redémarrage.
+
+## L'API
+
+Paquet `fr.annway.web` : serveur HTTP du JDK, sans dépendance. Les écritures arrivent en
+formulaire (`application/x-www-form-urlencoded`), les réponses partent en JSON, les montants
+en centimes et les instants en UTC. Chaque route déclare son accès (`Access`) : publique et
+limitée en débit, membre connecté, passager ou conducteur ; une erreur répond
+`{"code", "message", "field"}`.
+
+| Domaine | Routes |
+| --- | --- |
+| Comptes | `POST /api/auth/register`, `/login`, `/logout` ; `GET /api/me` ; `POST /api/me/profile`, `/api/me/vehicles`, `/api/me/reviews/{index}/reply` ; `GET /api/users/{id}`, `POST /api/users/{id}/reviews` |
+| Trajets | `GET /api/trips` (recherche et filtres), `/api/trips/{id}`, `/api/me/trips` ; `POST /api/trips`, `/api/trips/{id}/stops`, `/cancel`, `/finish` |
+| Réservations | `POST /api/trips/{id}/reservations` ; `GET /api/me/reservations` ; `POST /api/reservations/{id}/pay`, `/cancel`, `/validate`, `/refuse` |
+| Alertes et demandes | `GET`/`POST /api/me/alerts`, `POST /api/me/alerts/{index}/toggle` ; `GET`/`POST /api/me/trip-requests` ; `GET /api/trip-requests` |
+| Messages | `GET`/`POST /api/trips/{id}/messages` |
+| Divers | `GET /api/health`, `/api/equipment-types` |
+
+## Le front
+
+`frontend/` reprend le thème d'annski (mêmes jetons sémantiques dans `tokens.css`, mêmes
+polices, même en-tête noir) en noir et bleu, pour qu'annway la rejoigne un jour comme deuxième
+plateforme. Pages : accueil, catalogue et recherche (`/trajets`), détail d'un trajet
+(réservation, messages, gestion par le conducteur), publication, connexion et inscription,
+compte, réservations, alertes et demandes, demandes reçues par les conducteurs, profil d'un
+membre.
 
 ## Vérifier le code
 
