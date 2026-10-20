@@ -23,6 +23,7 @@ jobs:
       scripts: |
         lint
         typecheck
+        test
         build
 
   charter:
