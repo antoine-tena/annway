@@ -1,0 +1,68 @@
+# Rules of this repo checked by kiln's `charter` command: after each edit (Claude Code hook),
+# before each commit (pre-commit) and in CI. Bans hold everywhere. Ratchets: the existing debt
+# is a ceiling that only goes down. Floors: a value that only goes up. Values: `charter --detail`.
+# kiln keeps this file current (`kiln update`); budgets and floors are the project's to lower
+# and raise, and its own rules can be added here.
+
+size = "flame"
+exclude = ["/migrations/", "/notebooks/"]
+unverified_rules = "scripts/ci/unverified-rules.txt"
+
+[bans.forbidden-tools]
+id = "UV-PODMAN"
+
+# References to an audit report ("audit H36", "(CART-06)") rot with it. Add to `prefixes` the
+# prefixes of the project's audit findings as they come.
+[bans.audit-references]
+id = "AUDIT-REFERENCES"
+prefixes = "AUDIT"
+exclude = '(^docs/|^charter\.toml$|/migrations/|-lock\.yaml$|\.lock$)'
+
+[ratchets.file-size]
+id = "FILE-SIZE"
+files = ["backend/src/**/*.java"]
+suffixes = [".py", ".java", ".ts", ".tsx", ".vue", ".astro", ".css", ".mjs"]
+budget = 0
+
+# Java: the JDK logger, never the console nor a raw trace; the clock is injected.
+[ratchets.console-logging]
+rule = "occurrences"
+id = "LOGGING"
+files = ["backend/src/main/**/*.java"]
+pattern = "System.out.print"
+budget = 0
+
+[ratchets.error-logging]
+rule = "occurrences"
+id = "LOGGING"
+files = ["backend/src/main/**/*.java"]
+pattern = "System.err.print"
+budget = 0
+
+[ratchets.stack-traces]
+rule = "occurrences"
+id = "LOGGING"
+files = ["backend/src/**/*.java"]
+pattern = "printStackTrace("
+budget = 0
+
+[ratchets.clock-instant]
+rule = "occurrences"
+id = "CLOCK"
+files = ["backend/src/**/*.java"]
+pattern = "Instant.now()"
+budget = 0
+
+[ratchets.clock-date]
+rule = "occurrences"
+id = "CLOCK"
+files = ["backend/src/**/*.java"]
+pattern = "LocalDate.now()"
+budget = 0
+
+[ratchets.constant-time-java]
+rule = "occurrences"
+id = "CONSTANT-TIME"
+files = ["backend/src/main/**/*.java"]
+pattern = "Token.equals("
+budget = 0
