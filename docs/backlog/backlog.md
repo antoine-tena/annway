@@ -132,16 +132,17 @@ Paris time, criteria), a Playwright journey "book, pay, validate" against the fu
 them (only the demo data). To decide as a team: link sent by email, code by SMS, ID checked by
 whom?
 
-### T-14 · `kiln dev` starts a Java API
+### T-14 · `kiln dev` starts the Java API
 - **Type**: improvement
-- **Status**: todo
+- **Status**: to verify — `kiln dev` once the kiln candidate after v0.4.1-rc.1 is installed
 - **Opened**: 2026-10-20
 - **Effort**: XS · **Owner**: Claude · **Due**: —
 - **Origin**: branch feat/front-nuxt
 
-kiln's Java stack has no dev command (it was a library or a CLI): `kiln dev` only starts the
-front, the API is started by hand (README). To report to kiln with the user's agreement
-([REPORT-TO-KILN]), not to patch here.
+Fixed in kiln (develop, 00adf5e): a Java backend with a front is packaged and its jar runs
+next to the front, with the variables of `backend/.env`. annway's jar starts
+`fr.annway.web.WebMain`. The kiln installed on the machine (v0.4.1-rc.1) predates the fix:
+until then, `uv run --project ~/code/kiln kiln dev` does it.
 
 ### T-07 · Property tests of the search filters
 - **Type**: task
