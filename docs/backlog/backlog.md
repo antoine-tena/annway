@@ -54,6 +54,21 @@ North star: **annway en service**.
 
 ## 🟠 Important
 
+## 🟡 Normal
+
+### T-13 · Profile verifications
+- **Type**: idea
+- **Status**: todo
+- **Opened**: 2026-10-20
+- **Effort**: M · **Owner**: — · **Due**: —
+- **Origin**: branch feat/front-nuxt
+
+`Profile` knows the email, phone and ID verifications, the front shows them, but nothing sets
+them (only the demo data). To decide as a team: link sent by email, code by SMS, ID checked by
+whom?
+
+## ⚪ Background — long-running work, debt and ideas
+
 ### T-09 · Persist the data of the API
 - **Type**: task
 - **Status**: todo
@@ -76,21 +91,6 @@ seats and payments, and the export and anonymisation of [PERSONAL-DATA].
 `fr.annway.web.DemoPaymentApi` accepts every payment without charging anything. Choose a
 provider as a team, implement `ExternalPaymentApi` with its key in `.<service>/` and the
 environment ([SECRETS]); refunds go through `RefundService` (T-06).
-
-## 🟡 Normal
-
-### T-13 · Profile verifications
-- **Type**: idea
-- **Status**: todo
-- **Opened**: 2026-10-20
-- **Effort**: M · **Owner**: — · **Due**: —
-- **Origin**: branch feat/front-nuxt
-
-`Profile` knows the email, phone and ID verifications, the front shows them, but nothing sets
-them (only the demo data). To decide as a team: link sent by email, code by SMS, ID checked by
-whom?
-
-## ⚪ Background — long-running work, debt and ideas
 
 ---
 
