@@ -2,6 +2,7 @@ package fr.annway.web;
 
 import fr.annway.equipment.Equipment;
 import fr.annway.trip.Payment;
+import fr.annway.trip.Refund;
 import fr.annway.trip.PolytechTrip;
 import fr.annway.trip.Reservation;
 import fr.annway.trip.StationTrip;
@@ -57,7 +58,9 @@ public final class TripViews {
                 .put("requestedAt", reservation.requestedAt().toString())
                 .put("status", reservation.status())
                 .put("amountDueCents", reservation.trip().amountDueCents(reservation.seatCount()))
-                .put("payment", payment(reservation.payment()));
+                .put("payment", payment(reservation.payment()))
+                .put("refund", refund(reservation.refund()))
+                .put("refundDueCents", reservation.refundDueCents());
     }
 
     public static JsonObject equipment(Equipment equipment) {
@@ -72,5 +75,11 @@ public final class TripViews {
                 .put("amountCents", paid.amountCents())
                 .put("type", paid.type())
                 .put("paidAt", paid.paidAt().toString()));
+    }
+
+    private static Optional<JsonObject> refund(Optional<Refund> refund) {
+        return refund.map(refunded -> new JsonObject()
+                .put("amountCents", refunded.amountCents())
+                .put("refundedAt", refunded.refundedAt().toString()));
     }
 }

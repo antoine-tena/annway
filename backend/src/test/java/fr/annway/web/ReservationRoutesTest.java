@@ -80,6 +80,19 @@ class ReservationRoutesTest {
     }
 
     @Test
+    void paidReservationIsRefundedWhenRefusedOrCancelledEarly() {
+        var refusedId = book("seatCount=1");
+        web.post("/api/reservations/" + refusedId + "/pay", passenger, "amountCents=800");
+        var refused = web.post("/api/reservations/" + refusedId + "/refuse", driver, "");
+        assertTrue(body(refused).contains("\"refund\":{\"amountCents\":800"), body(refused));
+        var cancelledId = book("seatCount=2");
+        web.post("/api/reservations/" + cancelledId + "/pay", passenger, "amountCents=1600");
+        var cancelled = web.post("/api/reservations/" + cancelledId + "/cancel", passenger, "");
+        assertTrue(body(cancelled).contains("\"refund\":{\"amountCents\":1600"), body(cancelled));
+        assertTrue(body(cancelled).contains("\"refundDueCents\":0"));
+    }
+
+    @Test
     void malformedEquipmentIsAnInvalidField() {
         var noSeparator = web.post("/api/trips/" + tripId + "/reservations", passenger, "seatCount=1&equipment=SKI");
         assertEquals(HttpStatus.BAD_REQUEST, noSeparator.status());

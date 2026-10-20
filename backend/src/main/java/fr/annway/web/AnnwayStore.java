@@ -89,6 +89,12 @@ public final class AnnwayStore {
                 .orElseThrow(() -> new WebException(WebError.NOT_FOUND));
     }
 
+    public List<Reservation> reservationsOn(Trip trip) {
+        return reservations.values().stream()
+                .filter(reservation -> reservation.trip().id() == trip.id())
+                .toList();
+    }
+
     /** Réservations d'un passager, ou reçues sur les trajets d'un conducteur. */
     public List<Reservation> reservationsOf(User user) {
         return reservations.values().stream()

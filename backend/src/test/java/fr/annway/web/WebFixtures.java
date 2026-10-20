@@ -3,6 +3,7 @@ package fr.annway.web;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import fr.annway.payment.PaymentService;
+import fr.annway.payment.RefundService;
 import java.security.SecureRandom;
 import java.time.Clock;
 import java.time.Instant;
@@ -21,6 +22,7 @@ final class WebFixtures {
     static final String PASSWORD = "motdepasse-de-test";
     static final String CLIENT = "192.0.2.0";
     static final PaymentService ACCEPTING = (payer, amountCents) -> true;
+    static final RefundService REFUNDING = (payee, amountCents) -> true;
 
     final Api api;
 
@@ -29,7 +31,7 @@ final class WebFixtures {
     }
 
     WebFixtures(Clock clock) {
-        api = new Api(clock, new SecureRandom(), ACCEPTING, 1);
+        api = new Api(clock, new SecureRandom(), ACCEPTING, REFUNDING, 1);
     }
 
     ApiResponse get(String path, Optional<String> token) {

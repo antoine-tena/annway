@@ -1,6 +1,7 @@
 package fr.annway.web;
 
 import static fr.annway.web.WebFixtures.body;
+import static fr.annway.web.WebFixtures.idOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -82,6 +83,19 @@ class TripRoutesTest {
         var cancelled = web.post("/api/trips/" + tripId + "/cancel", driver, "");
         assertTrue(body(cancelled).contains("\"status\":\"CANCELLED\""));
         assertTrue(hasNoTrip("/api/trips"));
+    }
+
+    @Test
+    void cancelledTripClosesAndRefundsItsReservations() {
+        var tripId = web.stationTrip(driver);
+        var passenger = web.passenger("lea");
+        var booked = web.post("/api/trips/" + tripId + "/reservations", passenger, "seatCount=1");
+        var reservationId = idOf(body(booked));
+        web.post("/api/reservations/" + reservationId + "/pay", passenger, "amountCents=800");
+        web.post("/api/trips/" + tripId + "/cancel", driver, "");
+        var reservations = body(web.get("/api/me/reservations", passenger));
+        assertTrue(reservations.contains("\"status\":\"TRIP_CANCELLED\""), reservations);
+        assertTrue(reservations.contains("\"refund\":{\"amountCents\":800"), reservations);
     }
 
     @Test

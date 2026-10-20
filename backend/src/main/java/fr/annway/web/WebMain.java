@@ -29,8 +29,8 @@ public final class WebMain {
         var environment = System.getenv();
         var port = port(environment);
         var clock = Clock.systemUTC();
-        var api = new Api(clock, new SecureRandom(), new ExternalPaymentAdapter(new DemoPaymentApi()),
-                PasswordHasher.DEFAULT_ITERATIONS);
+        var payments = new ExternalPaymentAdapter(new DemoPaymentApi());
+        var api = new Api(clock, new SecureRandom(), payments, payments, PasswordHasher.DEFAULT_ITERATIONS);
         new DemoData(api.store(), api.credentials(), clock).load(demoPassword(environment));
         var server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/api/", new HttpEntry(api.router()));
