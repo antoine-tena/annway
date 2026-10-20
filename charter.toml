@@ -75,4 +75,4 @@ budget = 0
 rule = "test-density"
 id = "TEST-DENSITY"
 files = ["frontend/app/**"]
-floor = 0
+floor = 24

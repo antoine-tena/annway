@@ -79,19 +79,6 @@ environment ([SECRETS]); refunds go through `RefundService` (T-06).
 
 ## 🟡 Normal
 
-### T-12 · Front tests and end-to-end journeys
-- **Type**: task
-- **Status**: blocked — waiting for the team's decision on Vitest and Playwright ([NEW-DEPENDENCY])
-- **Opened**: 2026-10-20
-- **Effort**: M · **Owner**: Antoine · **Due**: —
-- **Origin**: branch feat/front-nuxt
-
-[TEST-DENSITY], [E2E-JOURNEYS], [AUTOMATED-ACCESSIBILITY]: unit tests of `utils/` (cents,
-Paris time, criteria), a Playwright journey "book, pay, validate" against the full stack, an
-`axe-core` check of the main pages. The journey was played by hand on 2026-10-20.
-[SECURITY-HEADERS] also asks for a test of the front's headers and CSP
-(`frontend/server/utils/securityHeaders.ts`, checked by hand on the built front for T-11).
-
 ### T-13 · Profile verifications
 - **Type**: idea
 - **Status**: todo
@@ -114,6 +101,7 @@ whom?
 One line per closed ticket, most recent first:
 `- **YYYY-MM-DD** · T-NN · Title — what was done (branch) · opened YYYY-MM-DD`.
 
+- **2026-10-20** · T-12 · Front tests and end-to-end journeys — Vitest, Playwright and axe-core chosen: unit tests of `utils/` (cents, Paris time, criteria) and of the security headers in CI (`pnpm test`), Playwright journey "book, pay, validate", axe-core audit of the main pages and CSP check against the full stack (`pnpm e2e`); test density floor raised to 24 (test/t12-front-tests) · opened 2026-10-20
 - **2026-10-20** · T-06 · Refund when a paid booking is cancelled or refused — rule decided: full refund (fixed price or donation) on refusal or trip cancellation, and on a passenger cancellation at least 24 h before departure, none later; `RefundService` next to `PaymentService`, `Refund`, status `TRIP_CANCELLED` closing the bookings of a cancelled trip, shown on the front (feat/t06-refund) · opened 2026-10-19
 - **2026-10-20** · T-11 · Strict CSP by nonce for the front — Nitro plugin `server/plugins/securityHeaders.ts`: the [SECURITY-HEADERS] on every response outside `/api/`, a CSP with no third-party origin and a nonce per page on the built front, checked in the browser; its automated test joins T-12 (feat/t11-csp-nonce) · opened 2026-10-20
 - **2026-10-20** · T-07 · Property tests of the search filters — `TripFilterPropertiesTest`: the filter contract (never more trips, none added, order kept) on 1000 generated lists; `jqwik` 1.10.2 accepted by the team, runs on JUnit 6 (test/jqwik-junit6) · opened 2026-10-20

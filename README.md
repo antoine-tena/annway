@@ -99,6 +99,15 @@ kiln check
 
 `./mvnw verify` pour le backend Java (compilation stricte, JUnit, couverture), ESLint et le contrôle des types côté frontend, puis la charte (`charter`).
 
+Côté front, dans `frontend/` :
+
+- `pnpm test` : tests unitaires Vitest (`app/utils/*.spec.ts`, `server/**/*.spec.ts`), lancés
+  aussi par la CI ;
+- `pnpm e2e` : tests de bout en bout Playwright (`e2e/`) contre la pile complète, que la commande
+  démarre elle-même (API Java sur le port 8180, front construit sur le 3100) : réserver, payer et
+  valider, l'audit axe-core (WCAG 2.2 AA) des pages principales, les en-têtes de sécurité et la
+  CSP. Une seule fois par poste avant le premier lancement : `pnpm exec playwright install chromium`.
+
 ## Mettre à jour
 
 Sur une branche dédiée, avec un arbre propre : `kiln update` (mises à jour compatibles) ou
