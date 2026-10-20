@@ -8,6 +8,9 @@ size = "flame"
 exclude = ["/migrations/", "/notebooks/"]
 unverified_rules = "scripts/ci/unverified-rules.txt"
 
+[bans.vue-style]
+id = "STYLE-1"
+
 [bans.forbidden-tools]
 id = "UV-PODMAN"
 
@@ -20,7 +23,7 @@ exclude = '(^docs/|^charter\.toml$|/migrations/|-lock\.yaml$|\.lock$)'
 
 [ratchets.file-size]
 id = "FILE-SIZE"
-files = ["backend/src/**/*.java"]
+files = ["backend/src/**/*.java", "frontend/app/**"]
 suffixes = [".py", ".java", ".ts", ".tsx", ".vue", ".astro", ".css", ".mjs"]
 budget = 0
 
@@ -66,3 +69,10 @@ id = "CONSTANT-TIME"
 files = ["backend/src/main/**/*.java"]
 pattern = "Token.equals("
 budget = 0
+
+# The front is where tests go missing first: its density only goes up.
+[floors.front-test-density]
+rule = "test-density"
+id = "TEST-DENSITY"
+files = ["frontend/app/**"]
+floor = 0

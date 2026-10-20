@@ -17,9 +17,23 @@ jobs:
     with:
       directory: backend
 
+  frontend:
+    uses: antoine-tena/kiln/.github/workflows/pnpm.yml@v0.4.1-rc.1
+    with:
+      scripts: |
+        lint
+        typecheck
+        build
+
   charter:
     uses: antoine-tena/kiln/.github/workflows/charter.yml@v0.4.1-rc.1
 
   # [SECRETS]: gitleaks searches the whole history, with no organisation licence.
   secrets-scan:
     uses: antoine-tena/kiln/.github/workflows/secrets.yml@v0.4.1-rc.1
+
+  security:
+    uses: antoine-tena/kiln/.github/workflows/security.yml@v0.4.1-rc.1
+    with:
+      uv: ""
+      pnpm: "frontend"

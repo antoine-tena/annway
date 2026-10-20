@@ -3,7 +3,7 @@
   "env": {
     "KILN_PROJECT": "annway",
     "KILN_BACKEND_DIR": "backend",
-    "KILN_FRONTEND_DIR": "",
+    "KILN_FRONTEND_DIR": "frontend",
     "KILN_TEST_ENV": ""
   },
   "extraKnownMarketplaces": {
@@ -17,7 +17,8 @@
     }
   },
   "enabledPlugins": {
-    "kiln@kiln": true
+    "kiln@kiln": true,
+    "nuxt@kiln": true
   },
   "permissions": {
     "deny": [

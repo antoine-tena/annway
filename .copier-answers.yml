@@ -6,7 +6,8 @@ ci_runner: local
 created: '2026-10-15'
 description: 'Covoiturage pour les sorties annski : proposer un trajet vers la station,
     réserver une place.'
-frontend: none
+frontend: nuxt
+frontend_deploy: none
 java_package: fr.annway
 language: fr
 language_custom: false
