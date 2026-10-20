@@ -4,6 +4,7 @@ import fr.annway.equipment.Equipment;
 import fr.annway.equipment.EquipmentFactory;
 import fr.annway.equipment.EquipmentType;
 import fr.annway.payment.PaymentService;
+import fr.annway.payment.RefundService;
 import fr.annway.trip.Reservation;
 import java.time.Clock;
 import java.util.List;
@@ -11,7 +12,8 @@ import java.util.Objects;
 
 /**
  * Réservations : le passager demande des places, paie et annule ; le conducteur valide ou
- * refuse. Chacun n'agit que sur ce qui est à lui (sinon 403).
+ * refuse. Chacun n'agit que sur ce qui est à lui (sinon 403). Une réservation payée qui se ferme
+ * est remboursée selon la règle de {@link Reservation}.
  */
 public final class ReservationRoutes {
 
@@ -20,11 +22,14 @@ public final class ReservationRoutes {
 
     private final AnnwayStore store;
     private final PaymentService paymentService;
+    private final RefundService refundService;
     private final Clock clock;
 
-    public ReservationRoutes(AnnwayStore store, PaymentService paymentService, Clock clock) {
+    public ReservationRoutes(AnnwayStore store, PaymentService paymentService, RefundService refundService,
+            Clock clock) {
         this.store = Objects.requireNonNull(store, "store");
         this.paymentService = Objects.requireNonNull(paymentService, "paymentService");
+        this.refundService = Objects.requireNonNull(refundService, "refundService");
         this.clock = Objects.requireNonNull(clock, "clock");
     }
 
@@ -72,7 +77,8 @@ public final class ReservationRoutes {
 
     private ApiResponse cancel(ApiCall call) {
         var reservation = ownReservation(call);
-        reservation.cancel(call.passenger());
+        reservation.cancel(call.passenger(), clock);
+        reservation.refund(refundService, clock);
         return ApiResponse.ok(TripViews.reservation(reservation));
     }
 
@@ -85,6 +91,7 @@ public final class ReservationRoutes {
     private ApiResponse refuse(ApiCall call) {
         var reservation = reservationOnOwnTrip(call);
         call.driver().refuseReservation(reservation);
+        reservation.refund(refundService, clock);
         return ApiResponse.ok(TripViews.reservation(reservation));
     }
 

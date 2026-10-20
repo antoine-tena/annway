@@ -64,6 +64,10 @@ en centimes et les instants en UTC. Chaque route déclare son accès (`Access`) 
 limitée en débit, membre connecté, passager ou conducteur ; une erreur répond
 `{"code", "message", "field"}`.
 
+Une réservation payée (prix fixe ou don) est remboursée en entier quand le conducteur la refuse
+ou annule le trajet, et quand le passager l'annule au moins 24 h avant le départ ; plus tard,
+elle ne l'est pas. Le prestataire de paiement est celui de démonstration (`DemoPaymentApi`).
+
 | Domaine | Routes |
 | --- | --- |
 | Comptes | `POST /api/auth/register`, `/login`, `/logout` ; `GET /api/me` ; `POST /api/me/profile`, `/api/me/vehicles`, `/api/me/reviews/{index}/reply` ; `GET /api/users/{id}`, `POST /api/users/{id}/reviews` |

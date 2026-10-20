@@ -2,10 +2,12 @@ package fr.annway.web;
 
 import fr.annway.account.Driver;
 import fr.annway.account.Vehicle;
+import fr.annway.payment.RefundService;
 import fr.annway.search.PriceFilter;
 import fr.annway.search.TimeWindowFilter;
 import fr.annway.search.TripFilter;
 import fr.annway.trip.PolytechTrip;
+import fr.annway.trip.Reservation;
 import fr.annway.trip.StationTrip;
 import fr.annway.trip.Stop;
 import fr.annway.trip.Trip;
@@ -23,10 +25,12 @@ import java.util.TreeSet;
 public final class TripRoutes {
 
     private final AnnwayStore store;
+    private final RefundService refundService;
     private final Clock clock;
 
-    public TripRoutes(AnnwayStore store, Clock clock) {
+    public TripRoutes(AnnwayStore store, RefundService refundService, Clock clock) {
         this.store = Objects.requireNonNull(store, "store");
+        this.refundService = Objects.requireNonNull(refundService, "refundService");
         this.clock = Objects.requireNonNull(clock, "clock");
     }
 
@@ -129,6 +133,9 @@ public final class TripRoutes {
     private ApiResponse cancel(ApiCall call) {
         var trip = ownTrip(call);
         trip.cancel();
+        var reservations = store.reservationsOn(trip);
+        reservations.forEach(Reservation::closeForCancelledTrip);
+        reservations.forEach(reservation -> reservation.refund(refundService, clock));
         return ApiResponse.ok(TripViews.detail(trip));
     }
 

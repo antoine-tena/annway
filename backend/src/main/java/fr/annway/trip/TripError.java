@@ -24,7 +24,9 @@ public enum TripError {
     ALREADY_PAID("Cette réservation est déjà payée."),
     WRONG_AMOUNT("Le montant ne correspond pas au prix du trajet."),
     INVALID_AMOUNT("Le montant doit être positif."),
-    PAYMENT_DECLINED("Le paiement a été refusé.");
+    PAYMENT_DECLINED("Le paiement a été refusé."),
+    REFUND_DECLINED("Le remboursement a été refusé."),
+    TRIP_NOT_CANCELLED("Ce trajet n'est pas annulé.");
 
     private final String userMessage;
 

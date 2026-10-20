@@ -5,6 +5,7 @@ import fr.annway.account.Passenger;
 import fr.annway.account.Vehicle;
 import fr.annway.equipment.Equipment;
 import fr.annway.payment.PaymentService;
+import fr.annway.payment.RefundService;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -20,6 +21,8 @@ final class TripFixtures {
     static final Clock AFTER_DEPARTURE = Clock.fixed(LATE_EVENING.plusSeconds(60), ZoneOffset.UTC);
     static final PaymentService ACCEPTING = (payer, amountCents) -> true;
     static final PaymentService DECLINING = (payer, amountCents) -> false;
+    static final RefundService REFUNDING = (payee, amountCents) -> true;
+    static final RefundService REFUSING_REFUNDS = (payee, amountCents) -> false;
 
     private TripFixtures() {
     }
