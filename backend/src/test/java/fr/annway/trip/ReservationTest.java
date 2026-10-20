@@ -74,7 +74,7 @@ class ReservationTest {
         var trip = TripFixtures.polytechTrip();
         var reservation = TripFixtures.reservation(trip, 3);
         reservation.validate(trip.driver());
-        reservation.cancel(reservation.passenger());
+        reservation.cancel(reservation.passenger(), TripFixtures.BEFORE_DEPARTURE);
         assertEquals(ReservationStatus.CANCELLED, reservation.status());
         assertEquals(3, trip.availableSeats());
         assertEquals(TripStatus.OPEN, trip.status());
@@ -83,15 +83,15 @@ class ReservationTest {
     @Test
     void onlyThePassengerCancels() {
         var reservation = TripFixtures.reservation(TripFixtures.polytechTrip(), 1);
-        var error = assertThrows(TripException.class, () -> reservation.cancel(TripFixtures.passenger(11)));
+        var error = assertThrows(TripException.class, () -> reservation.cancel(TripFixtures.passenger(11), TripFixtures.BEFORE_DEPARTURE));
         assertEquals(TripError.NOT_RESERVATION_PASSENGER, error.error());
     }
 
     @Test
     void cancelledReservationCannotBeCancelledAgain() {
         var reservation = TripFixtures.reservation(TripFixtures.polytechTrip(), 1);
-        reservation.cancel(reservation.passenger());
-        var error = assertThrows(TripException.class, () -> reservation.cancel(reservation.passenger()));
+        reservation.cancel(reservation.passenger(), TripFixtures.BEFORE_DEPARTURE);
+        var error = assertThrows(TripException.class, () -> reservation.cancel(reservation.passenger(), TripFixtures.BEFORE_DEPARTURE));
         assertEquals(TripError.RESERVATION_CLOSED, error.error());
     }
 }
