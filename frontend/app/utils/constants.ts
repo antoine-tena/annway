@@ -33,7 +33,11 @@ export const RESERVATION_STATUS_LABELS: Record<ReservationStatus, string> = {
   VALIDATED: 'Validée',
   REFUSED: 'Refusée',
   CANCELLED: 'Annulée',
+  TRIP_CANCELLED: 'Trajet annulé',
 }
+
+/** Délai avant le départ jusqu'auquel le passager qui annule est remboursé (`Reservation`). */
+export const FREE_CANCELLATION_NOTICE_HOURS = 24
 
 export const EQUIPMENT_LABELS: Record<EquipmentType, string> = {
   SKI: 'Skis',
@@ -56,6 +60,7 @@ export const RESERVATION_STATUS_TONES: Record<ReservationStatus, Tone> = {
   VALIDATED: 'success',
   REFUSED: 'danger',
   CANCELLED: 'muted',
+  TRIP_CANCELLED: 'danger',
 }
 
 export const LOADING_TEXT = 'Chargement…'

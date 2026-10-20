@@ -54,17 +54,6 @@ North star: **annway en service**.
 
 ## 🟠 Important
 
-### T-06 · Refund when a paid booking is cancelled or refused
-- **Type**: idea
-- **Status**: todo
-- **Opened**: 2026-10-19
-- **Effort**: S · **Owner**: Antoine · **Due**: —
-- **Origin**: T-04
-
-`Reservation.cancel` gives the seats back but not the money; `PaymentService` has no refund.
-To decide as a team: refund a fixed price always, never a donation? Up to which delay before
-departure?
-
 ### T-09 · Persist the data of the API
 - **Type**: task
 - **Status**: todo
@@ -86,7 +75,7 @@ seats and payments, and the export and anonymisation of [PERSONAL-DATA].
 
 `fr.annway.web.DemoPaymentApi` accepts every payment without charging anything. Choose a
 provider as a team, implement `ExternalPaymentApi` with its key in `.<service>/` and the
-environment ([SECRETS]); with T-06 for refunds.
+environment ([SECRETS]); refunds go through `RefundService` (T-06).
 
 ## 🟡 Normal
 
@@ -125,6 +114,7 @@ whom?
 One line per closed ticket, most recent first:
 `- **YYYY-MM-DD** · T-NN · Title — what was done (branch) · opened YYYY-MM-DD`.
 
+- **2026-10-20** · T-06 · Refund when a paid booking is cancelled or refused — rule decided: full refund (fixed price or donation) on refusal or trip cancellation, and on a passenger cancellation at least 24 h before departure, none later; `RefundService` next to `PaymentService`, `Refund`, status `TRIP_CANCELLED` closing the bookings of a cancelled trip, shown on the front (feat/t06-refund) · opened 2026-10-19
 - **2026-10-20** · T-11 · Strict CSP by nonce for the front — Nitro plugin `server/plugins/securityHeaders.ts`: the [SECURITY-HEADERS] on every response outside `/api/`, a CSP with no third-party origin and a nonce per page on the built front, checked in the browser; its automated test joins T-12 (feat/t11-csp-nonce) · opened 2026-10-20
 - **2026-10-20** · T-07 · Property tests of the search filters — `TripFilterPropertiesTest`: the filter contract (never more trips, none added, order kept) on 1000 generated lists; `jqwik` 1.10.2 accepted by the team, runs on JUnit 6 (test/jqwik-junit6) · opened 2026-10-20
 - **2026-10-20** · T-14 · `kiln dev` starts the Java API — fixed in kiln (v0.4.1-rc.2): the jar runs next to the front with `backend/.env`; annway's jar starts `fr.annway.web.WebMain` (fix/dev-api) · opened 2026-10-20

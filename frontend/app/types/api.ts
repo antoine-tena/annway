@@ -4,7 +4,7 @@
 export type Role = 'PASSENGER' | 'DRIVER'
 export type TripType = 'STATION' | 'POLYTECH'
 export type TripStatus = 'OPEN' | 'FULL' | 'FINISHED' | 'CANCELLED'
-export type ReservationStatus = 'PENDING' | 'VALIDATED' | 'REFUSED' | 'CANCELLED'
+export type ReservationStatus = 'PENDING' | 'VALIDATED' | 'REFUSED' | 'CANCELLED' | 'TRIP_CANCELLED'
 export type EquipmentType = 'SKI' | 'SNOWBOARD' | 'SLED'
 export type PaymentType = 'FIXED_PRICE' | 'DONATION'
 
@@ -96,6 +96,8 @@ export interface Reservation {
   status: ReservationStatus
   amountDueCents: number
   payment: { amountCents: number, type: PaymentType, paidAt: string } | null
+  refund: { amountCents: number, refundedAt: string } | null
+  refundDueCents: number
 }
 
 export interface SearchCriteria {

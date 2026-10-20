@@ -7,13 +7,20 @@ import UiStatusPill from '~/components/ui/UiStatusPill.vue'
 import { errorMessage } from '~/composables/useApiClient'
 import { useReservations } from '~/composables/useReservations'
 import type { Reservation, Role } from '~/types/api'
-import { EQUIPMENT_LABELS, RESERVATION_STATUS_LABELS, RESERVATION_STATUS_TONES } from '~/utils/constants'
+import {
+  EQUIPMENT_LABELS,
+  FREE_CANCELLATION_NOTICE_HOURS,
+  RESERVATION_STATUS_LABELS,
+  RESERVATION_STATUS_TONES,
+} from '~/utils/constants'
 import { eurosToCents, formatCents, formatDay, formatTime } from '~/utils/format'
 import { CARD_CLASSES } from '~/utils/ui'
 
 /**
  * Une réservation, vue par son passager (payer, annuler) ou par le conducteur du trajet
- * (valider, refuser). Sur une navette Polytech, le paiement est un don libre.
+ * (valider, refuser). Sur une navette Polytech, le paiement est un don libre. Une réservation
+ * payée est remboursée si le conducteur la refuse ou annule le trajet, ou si le passager annule
+ * assez tôt.
  */
 const { reservation, role } = defineProps<{ reservation: Reservation, role: Role }>()
 const emit = defineEmits<{ changed: [reservation: Reservation] }>()
@@ -87,6 +94,15 @@ function pay(): void {
       <template v-if="reservation.payment">
         Payé {{ formatCents(reservation.payment.amountCents) }}
         {{ reservation.payment.type === 'DONATION' ? '(don)' : '' }}
+        <template v-if="reservation.refund">
+          · remboursé {{ formatCents(reservation.refund.amountCents) }}
+        </template>
+        <template v-else-if="reservation.refundDueCents">
+          · remboursement de {{ formatCents(reservation.refundDueCents) }} en attente
+        </template>
+        <template v-else-if="isOpen">
+          · remboursé si annulé au moins {{ FREE_CANCELLATION_NOTICE_HOURS }} h avant le départ
+        </template>
       </template>
       <template v-else-if="reservation.trip.isPaymentRequired">
         À payer : {{ formatCents(reservation.amountDueCents) }}, avant la validation du conducteur.
