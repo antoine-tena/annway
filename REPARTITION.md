@@ -51,7 +51,7 @@ Fabrique de matériel, catalogue et alertes de trajets, filtres de recherche int
 - Stratégie : `StrategieFiltre` (interface), `FiltreParPrix`, `FiltreParHoraire`, `SansFiltre`
 
 Dans le code (paquet `fr.annway.search`, en anglais) : `TripFilter`, `PriceFilter`,
-`TimeWindowFilter`, `NoFilter`. Erreurs métier : `SearchError` (énumération), `SearchException`.
+`TimeWindowFilter`, `NoFilter` ; `TripSubject`, `TripObserver`, `TripCatalogue`, `TripAlert`. Erreurs métier : `SearchError` (énumération), `SearchException`.
 Données de test : `SearchFixtures`.
 
 ## Points de contact entre modules
