@@ -14,3 +14,13 @@ saveExact: true
 updateConfig:
   ignoreDependencies:
     - typescript
+
+# Dérogations datées ([VULNERABILITY-AUDIT]), accordées le 20 octobre 2026 : alertes hautes sans
+# version corrigée publiée, absentes du build de production (.output), vérifié le même jour. À
+# revoir le 20 janvier 2027 ou dès qu'un correctif sort ; un `overrides` les remplace alors.
+# - GHSA-86w9-cpqp-85rv, node-forge : nuxt > nitropack > listhen, serveur de dev (HTTPS local).
+# - GHSA-vfj7-8cjw-p6xm, braces : nitropack > globby > micromatch, recherche de fichiers au build.
+auditConfig:
+  ignoreGhsas:
+    - GHSA-86w9-cpqp-85rv
+    - GHSA-vfj7-8cjw-p6xm
