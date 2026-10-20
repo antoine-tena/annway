@@ -2,7 +2,7 @@ package fr.annway.equipment;
 
 import java.util.Objects;
 
-/** Erreur métier du domaine du matériel ([ERREURS-METIER]) : code machine et message en français. */
+/** Erreur métier du domaine du matériel ([DOMAIN-ERRORS]) : code machine et message en français. */
 public final class EquipmentException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;

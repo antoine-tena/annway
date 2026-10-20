@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * Utilisateur d'annway, passager ou conducteur. Il possède son profil et les avis qu'il a reçus.
  * Nom, e-mail et téléphone sont des données personnelles : {@link #toString()} n'expose que
- * l'identifiant ([DONNEES-PERSO]).
+ * l'identifiant ([PERSONAL-DATA]).
  */
 public abstract sealed class User permits Passenger, Driver {
 
