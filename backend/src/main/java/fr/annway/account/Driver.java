@@ -1,13 +1,17 @@
 package fr.annway.account;
 
+import fr.annway.search.TripCatalogue;
+import fr.annway.trip.Reservation;
+import fr.annway.trip.Trip;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * Conducteur : possède au moins un véhicule, deux véhicules ne partagent pas une immatriculation.
- * La publication de trajets et la gestion des réservations s'ajoutent quand les classes des
- * trajets existent.
+ * Il publie ses trajets au catalogue et valide ou refuse les réservations qu'on lui demande ; les
+ * contrôles (son trajet, une seule publication, réservation en attente) sont faits par le
+ * catalogue et la réservation.
  */
 public final class Driver extends User {
 
@@ -34,5 +38,19 @@ public final class Driver extends User {
 
     public List<Vehicle> vehicles() {
         return List.copyOf(vehicles);
+    }
+
+    /** Publie son trajet au catalogue, qui prévient les alertes abonnées. */
+    public void publishTrip(Trip trip, TripCatalogue catalogue) {
+        Objects.requireNonNull(catalogue, "catalogue").publish(this, trip);
+    }
+
+    /** Accepte la réservation : les places sont prises sur le trajet. */
+    public void validateReservation(Reservation reservation) {
+        Objects.requireNonNull(reservation, "reservation").validate(this);
+    }
+
+    public void refuseReservation(Reservation reservation) {
+        Objects.requireNonNull(reservation, "reservation").refuse(this);
     }
 }
