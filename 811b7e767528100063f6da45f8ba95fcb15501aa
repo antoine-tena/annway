@@ -1,0 +1,7 @@
+kiln ci: success
+commit: 811b7e767528100063f6da45f8ba95fcb15501aa
+date: 2026-10-20T22:48:21+02:00
+machine: DESKTOP-93QNEIL
+duration: 0 min 28 s
+jobs replayed: frontend ok, charter ok, secrets-scan ok, security ok
+not replayed: backend (workflow maven not replayed locally yet)
