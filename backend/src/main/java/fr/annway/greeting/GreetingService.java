@@ -2,7 +2,7 @@ package fr.annway.greeting;
 
 import java.util.Objects;
 
-/** Exemple de service : reçoit des valeurs, renvoie une valeur, ne touche pas au terminal. */
+/** Example service: receives values, returns a value, never touches the terminal. */
 public final class GreetingService {
 
     static final String DEFAULT_NAME = "monde";

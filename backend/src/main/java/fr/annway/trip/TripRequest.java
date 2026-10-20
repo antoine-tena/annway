@@ -7,7 +7,7 @@ import java.util.Objects;
 
 /**
  * Demande de trajet d'un passager qui n'a rien trouvé : ses critères et le jour où il l'a faite,
- * dans le calendrier de Paris ([FUSEAU]).
+ * dans le calendrier de Paris ([TIME-ZONE]).
  */
 public record TripRequest(Passenger passenger, SearchCriteria criteria, LocalDate createdOn) {
 

@@ -2,7 +2,7 @@ package fr.annway.account;
 
 import java.util.Objects;
 
-/** Erreur métier du domaine des comptes ([ERREURS-METIER]) : code machine et message en français. */
+/** Erreur métier du domaine des comptes ([DOMAIN-ERRORS]) : code machine et message en français. */
 public final class AccountException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;

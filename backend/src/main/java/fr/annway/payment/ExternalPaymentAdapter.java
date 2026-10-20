@@ -6,7 +6,7 @@ import java.util.Objects;
 
 /**
  * Adaptateur : présente l'API de paiement tierce sous le contrat {@link PaymentService}. Le
- * journal ne garde que l'identifiant du payeur, jamais son e-mail ([DONNEES-PERSO]).
+ * journal ne garde que l'identifiant du payeur, jamais son e-mail ([PERSONAL-DATA]).
  */
 public final class ExternalPaymentAdapter implements PaymentService {
 

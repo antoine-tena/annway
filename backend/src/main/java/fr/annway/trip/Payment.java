@@ -3,7 +3,7 @@ package fr.annway.trip;
 import java.time.Instant;
 import java.util.Objects;
 
-/** Paiement accepté d'une réservation : montant en centimes ([ARGENT]), instant UTC ([FUSEAU]). */
+/** Paiement accepté d'une réservation : montant en centimes ([MONEY]), instant UTC ([TIME-ZONE]). */
 public record Payment(long amountCents, PaymentType type, Instant paidAt) {
 
     public Payment {

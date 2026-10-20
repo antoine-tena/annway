@@ -1,0 +1,49 @@
+<!-- Written by kiln and kept current by `kiln update`: do not edit, it would be overwritten.
+Project rules go in CLAUDE.md or in .claude/rules/ outside kiln/. -->
+# annway: working here
+
+Covoiturage pour les sorties annski : proposer un trajet vers la station, réserver une place.
+
+Size: **Flame**, an app in production, real users, several contributors (`kiln set size=…` changes it).
+Backend Java 25, Maven, no framework in `backend/`.
+The repo is generated and kept current by [kiln](https://github.com/antoine-tena/kiln).
+
+## Commands
+- `cd backend && ./mvnw verify`: compile (warnings are errors), run JUnit, check coverage.
+- `kiln check`: every check of the stack (Maven), then `charter`.
+  Run it before saying a change is done.
+- `kiln update`: kiln's improvements and compatible dependency upgrades, on a branch, checks
+  included; `kiln set key=value` changes a setting of the project (stack, team, podman…).
+
+## Language
+- Talk with the user in French. Docs (README, `docs/`), commit messages, code
+  comments, tickets and the texts users read are in French too.
+- Code identifiers are always English. The keywords of `docs/backlog/` (`Type`, `Status`,
+  `todo`, section titles) stay English whatever the language.
+
+## Where the state of the project lives
+
+- `docs/backlog/` is the only up-to-date list of work: `backlog.md` (tickets `T-NN` by
+  priority, done ones in its "Done" log), `rejected.md` (what was turned down), `urgent.md`
+  (what only a human of the team can do). Skill `/kiln:backlog`.
+- `charter.toml`: the checked rules and their budgets; `kiln-waivers.toml`: deliberate
+  deviations; `.copier-answers.yml`: the project's settings for kiln (changed by `kiln set`,
+  never by hand).
+
+## Git
+
+- **[NO-COMMIT-ON-MAIN]** Never commit on `main` nor on `develop`: always a dedicated branch,
+  preferably in its own worktree (`/kiln:worktree`, under `.claude/worktrees/`), so that two
+  sessions never cross in the main tree. It is merged into `develop` by `/kiln:merge`, directly:
+  no pull request nor approval required (a PR stays possible to ask for an opinion). Enforced by
+  the `no-commit-to-branch` pre-commit hook, kiln's branch guard, and GitHub rulesets (`develop`
+  can be neither deleted nor force-pushed; `main` only takes releases, through `/kiln:release`).
+- **[BRANCHES]** Prefixes `feat/`, `fix/`, `refactor/`, `test/`, `chore/`, `docs/`; lowercase,
+  no spaces (`feat/station-map`).
+- **[COMMITS]** Small and atomic: 10 files at most, a title of 50
+  characters at most, prefixed by its type with an optional scope (`feat:`, `fix:`,
+  `refactor:`, `style:`, `docs:`, `perf:`, `test:`, `build:`, `ci:`, `chore:`, `revert:`;
+  `fix(map): …`). Never a `Co-Authored-By: Claude` nor `Claude-Session:` line,
+  never `--author`: the author stays the one of `git config`.
+- **[MERGE]** Merge commits (`git merge --no-ff`), never squash nor rebase onto the integration
+  branch; then the branch goes, local and remote, with its worktree (`/kiln:merge`).

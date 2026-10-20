@@ -32,6 +32,15 @@ North star: **annway en service**.
   🔴 critical (now), 🟠 important (before the north star), 🟡 normal, ⚪ background
   (long-running work, debt, ideas still to be explored).
 - **Effort**: XS (under an hour), S (half a day), M (one or two days), L (more).
+- **Owner**: `—` (free, anyone may take it), a member's GitHub login (`@login`) or first name
+  (the ticket is reserved for them), `Claude` (an agent's job), or `contributor — #NN` (kept for
+  an outside contributor). An agent only works on a free ticket or one owned by the account it
+  works for (`gh api user --jq .login`): it skips the others and, asked for one, says who owns
+  it instead of doing it. **Each member writes only their own login**: taking a free ticket, or
+  turning their own first name into their login; never someone else's (only the owner hands a
+  ticket over).
+- **Releases**: the `## 🚀 Releases` section at the top places every open ticket in a planned
+  release (`/kiln:backlog plan`); numbers are planned, not promised, until the candidate is cut.
 - **Closing a ticket**: remove it from its section and add a line at the top of the "✅ Done"
   log: `- **YYYY-MM-DD** · T-NN · Title — what was done (branch) · opened YYYY-MM-DD`.
 - **Details in archived audits**: when a ticket quotes lines of `docs/_archive/`, the original
@@ -64,10 +73,10 @@ What to do, why, where to look.
 - [ ] `TripFilter` strategy interface (`filter(List<Trip>)`), price filter, time-window filter,
   no-op filter
 - [ ] Price filter in integer cents (`maxPriceCents`), not the `double` of the diagram
-  ([ARGENT]): `Trip.amountDueCents(1)`, which is 0 for a Polytech trip (free donation)
-- [ ] Time bounds computed in `Europe/Paris` ([FUSEAU])
+  ([MONEY]): `Trip.amountDueCents(1)`, which is 0 for a Polytech trip (free donation)
+- [ ] Time bounds computed in `Europe/Paris` ([TIME-ZONE])
 - [ ] Example tests, plus property tests (`jqwik`): a filter never returns more trips than it
-  receives ([TESTS-PROPRIETES], dependency to decide as a team)
+  receives ([PROPERTY-TESTS], dependency to decide as a team)
 
 Use case « Filtrer les résultats (prix, horaire) », an optional extension of « Rechercher un
 trajet »: without a filter the search returns everything. Scenarios to test:
@@ -105,7 +114,7 @@ Open questions, not answered by either diagram:
   keeps the matching trips (`matchedTrips()`), the display comes later
 - [ ] Who adds a published trip to the catalogue: « Publier un trajet » is `Driver` (Pavlo),
   the catalogue is mine; a service between them, rather than `Driver` knowing the catalogue
-  ([COUCHES]), to agree with Pavlo
+  ([LAYERS]), to agree with Pavlo
 - [x] Full, finished or cancelled trips: out of search and alerts — `Trip.matches` only
   accepts an `OPEN` trip
 
