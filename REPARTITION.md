@@ -54,6 +54,19 @@ Dans le code (paquet `fr.annway.search`, en anglais) : `TripFilter`, `PriceFilte
 `TimeWindowFilter`, `NoFilter` ; `TripSubject`, `TripObserver`, `TripCatalogue`, `TripAlert`. Erreurs métier : `SearchError` (énumération), `SearchException`.
 Données de test : `SearchFixtures`.
 
+## Partie 4 : API web et interface (Antoine)
+
+L'API HTTP qui expose les trois parties, et le front qui la consomme.
+
+Dans le code (paquet `fr.annway.web`, en anglais) : `WebMain`, `Api`, `HttpEntry`, `Router`,
+`Route`, `Access`, `ApiCall`, `ApiHandler`, `ApiRequest`, `ApiResponse`, `FormData`, `Json`,
+`JsonObject`, `HttpStatus`, `WebError`, `WebException`, `Role`, `CriteriaForm` ; sécurité :
+`PasswordHasher`, `PasswordHash`, `Credentials`, `SessionStore`, `SessionCookie`,
+`RateLimiter`, `ClientKey` ; stockage : `AnnwayStore` ; routes : `AuthRoutes`,
+`AccountRoutes`, `TripRoutes`, `ReservationRoutes`, `SearchRoutes`, `MessageRoutes`,
+`MetaRoutes` ; vues : `AccountViews`, `TripViews`, `SearchViews` ; démonstration : `DemoData`,
+`DemoPaymentApi`. Tout `frontend/`.
+
 ## Points de contact entre modules
 
 Un module **utilise** les classes d'un autre sans les modifier :
@@ -61,6 +74,8 @@ Un module **utilise** les classes d'un autre sans les modifier :
 - `Reservation` (Antoine) fait appel à `Materiel` (Nathan).
 - `Trajet` (Antoine) est rattaché à un `Conducteur` et à son `Vehicule` (Pavlo).
 - `CatalogueTrajets` et les filtres (Nathan) travaillent sur des `Trajet` (Antoine).
+- L'API web (Antoine) appelle les classes des trois parties sans les modifier ; elle vérifie
+  l'accès (401, 403) avant de leur déléguer.
 
 Ce qui ne figure dans aucune liste (classe nouvelle, utilitaire partagé) se décide en équipe
 avant d'être écrit, puis s'ajoute ici à un propriétaire.

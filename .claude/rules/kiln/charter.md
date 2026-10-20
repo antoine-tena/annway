@@ -31,7 +31,8 @@ matching files.
 
 ## Size and structure
 
-- **[FILE-SIZE]** 300 lines at most per file (ratchet). A Java class that grows splits into classes of one responsibility each.
+- **[FILE-SIZE]** 300 lines at most per file (ratchet). A Vue component that grows becomes a
+  directory (an entry point and sub-components). A Java class that grows splits into classes of one responsibility each.
   Exempt: generated files, those `.gitattributes` marks `linguist-generated`, its only list.
 - **[FUNCTION-SIZE]** One function, one responsibility, 30 lines at most (outside component
   templates and docstrings); a test may reach 40 when splitting it would hide the scenario.
@@ -45,14 +46,14 @@ matching files.
   `station_coordinates`). Only exception: a parameter imposed by a framework's signature.
 - **[VOCABULARY]** The code speaks English, in the words of its domain; texts users read follow
   the project's language. Page addresses are public URLs and need not follow the code.
-- **[BOOLEANS]** A boolean is prefixed: `is`, `has`, `should`, `can` in Java (`isFull`);.
-- **[CASE]** Classes in PascalCase; constants in `UPPER_SNAKE_CASE`; Java methods and variables in camelCase, packages in lowercase;
+- **[BOOLEANS]** A boolean is prefixed: `is`, `has`, `should`, `can` in TypeScript (`isLoading`); `is`, `has`, `should`, `can` in Java (`isFull`);.
+- **[CASE]** Classes in PascalCase; constants in `UPPER_SNAKE_CASE`; Java methods and variables in camelCase, packages in lowercase; components in PascalCase prefixed by their domain (`ChartLegend`, `MapTooltip`);
   files follow their language's convention.
 
 ## Values
 
 - **[NO-MAGIC-VALUES]** No business literal in the code (status, role, threshold, delay, price,
-  colour, repeated column name): an `enum` or a named `static final` constant in Java.
+  colour, repeated column name): constants in `app/utils/constants.ts` or TypeScript enums for the front; an `enum` or a named `static final` constant in Java.
   Not magic: `0`, `1`, `-1`, `""`, `None`, indexes and literals in tests.
 - **[MONEY]** Every amount is an integer in minor units (`*_cents`), in the database, the API and
   the front; never a float for money, converted only for display.
@@ -65,7 +66,7 @@ matching files.
   messages, URLs, cache keys or figures: log the identifier (`user_id`), not the person. Any new personal data stored is covered, in the same change, by the data
   export and the anonymisation the law of the users asks for (GDPR in Europe).
 - **[SECRETS]** No secret in the code nor in the repository: everything goes through the
-  environment (`System.getenv` read at the edge for the backend).
+  environment (`System.getenv` read at the edge for the backend, `runtimeConfig` for the front).
   A secret committed by mistake is compromised: it gets changed.
 
 ## Errors, inputs and comments
@@ -84,7 +85,7 @@ matching files.
 - **[UV-PODMAN]** Python goes through uv (`uv add`, `uv run`, `uv tool install`): never pip, pipx
   nor `requirements.txt`. Containers go through podman (`Containerfile`, `compose.yaml`,
   `podman-compose`): never docker, `Dockerfile` nor `docker-compose.yml` (checked). Java goes through the wrapper `backend/mvnw`, never a `mvn` installed on the machine.
-- **[LOCKED-DEPENDENCIES]** Every dependency is resolved by a committed lockfile; CI installs it frozen and
+- **[LOCKED-DEPENDENCIES]** Every dependency is resolved by a committed lockfile (`pnpm-lock.yaml`); CI installs it frozen and
   fails when it drifts. Maven has no lockfile: exact versions in `backend/pom.xml` (the enforcer refuses
   ranges), checksums required, Maven itself pinned by the wrapper.
 - **[NEW-DEPENDENCY]** A new dependency is justified in its commit: maintained (a release less

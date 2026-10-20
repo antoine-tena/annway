@@ -1,0 +1,16 @@
+# Install scripts of dependencies: refused, prebuilt binaries are enough.
+allowBuilds:
+  '@parcel/watcher': false
+  '@tailwindcss/oxide': false
+  esbuild: false
+  unrs-resolver: false
+  vue-demi: false
+
+# Exact versions in package.json, even after `kiln update` ([LOCKED-DEPENDENCIES]).
+saveExact: true
+
+# `kiln update` does not move these dependencies to a new major: TypeScript 7 breaks vue-tsc 3
+# (October 2026). Remove once a vue-tsc release supports it.
+updateConfig:
+  ignoreDependencies:
+    - typescript

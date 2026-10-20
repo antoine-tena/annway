@@ -4,6 +4,10 @@
     "anthropic.claude-code",
     "github.vscode-pull-request-github",
     "davidanson.vscode-markdownlint",
-    "vscjava.vscode-java-pack"
+    "vscjava.vscode-java-pack",
+    "vue.volar",
+    "nuxtr.nuxtr-vscode",
+    "dbaeumer.vscode-eslint",
+    "bradlc.vscode-tailwindcss"
   ]
 }

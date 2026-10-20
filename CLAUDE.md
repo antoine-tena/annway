@@ -13,7 +13,11 @@ that adds, moves or removes a directory, a domain or an entry point. One line pe
 it holds; no copy of the code.
 
 - `backend/src/main/java/fr/annway/`: entry point (`Main.java`), one
-  package per domain; `backend/src/test/java/`: JUnit tests; `backend/pom.xml`: Maven build.
+  package per domain; `web/`: the HTTP API (`WebMain`, routes per domain, sessions, demo data);
+  `backend/src/test/java/`: JUnit tests; `backend/pom.xml`: Maven build.
+- `frontend/app/`: Nuxt front; `pages/` (one per screen), `components/` (`ui/`, `header/`,
+  `trip/`, `account/`, `auth/`, `reservation/`), `composables/` (one per API domain),
+  `assets/css/tokens.css` (annski's theme in blue).
 - `docs/backlog/`: the work to do; `charter.toml`: the checked rules; `.claude/rules/kiln/`:
   kiln's rules for Claude.
 
@@ -30,8 +34,10 @@ it holds; no copy of the code.
 
 - Ce dépôt est **indépendant** d'annski : il ne dépend d'aucun de ses fichiers et ne suppose pas
   qu'annski est présent sur la machine.
-- **Tout le projet est en Java** (Java 25 LTS), aucun autre langage applicatif. Aucun
-  framework : toute bibliothèque ou tout outil se décide en équipe ([NEW-DEPENDENCY]).
+- Le backend est **en Java** (Java 25 LTS), sans framework ; le front est en Nuxt (TypeScript),
+  comme celui d'annski, qu'annway rejoindra un jour comme deuxième plateforme : il en reprend
+  les jetons, l'en-tête et la connexion, en noir et bleu. Toute autre bibliothèque ou tout
+  autre outil se décide en équipe ([NEW-DEPENDENCY]).
 - Déploiement : `.github/workflows/deploy.yml`, lancé à la main depuis `main`, qui rejoue la CI
   avant toute mise en production.
 - **[PERMISSIONS]** Chaque route déclare son authentification ; une route publique le dit et le

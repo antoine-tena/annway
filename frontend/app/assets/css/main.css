@@ -1,0 +1,30 @@
+/* [STYLE-3] The only CSS file nuxt.config.ts references: Tailwind, the tokens, then the
+   isolates in alphabetical order. */
+@import "tailwindcss";
+@import "./tokens.css";
+/* Polices d'annski, servies par le site lui-même (aucun domaine tiers). */
+@import "@fontsource/barlow-condensed/600.css";
+@import "@fontsource/barlow-condensed/700.css";
+@import "@fontsource/public-sans/400.css";
+@import "@fontsource/public-sans/600.css";
+@import "@fontsource/public-sans/700.css";
+
+/* Fond et texte de la page, pour tout le produit. */
+@layer base {
+  html {
+    background-color: var(--surface);
+    color: var(--text);
+    color-scheme: dark;
+  }
+}
+
+/* [STYLE-5] !important allowed here: the global rule must win over any animation, third-party
+   ones included. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

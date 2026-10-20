@@ -22,7 +22,7 @@ North star: **annway en service**.
     Why, what to do (as a `- [ ]` checklist when there are several steps), where to look.
 
 - **ID** `T-NN`: stable, never reused, quoted as is in commits and branches.
-  **Next free: T-09.**
+  **Next free: T-15.**
 - **Type**, one of: `bug` (something is broken); `improvement` (it works, it could work
   better); `idea` (nothing exists yet, to be explored); `task` (work that is neither: a release,
   a decision, a check).
@@ -74,7 +74,74 @@ What to do, why, where to look.
 To decide as a team: refund a fixed price always, never a donation? Up to which delay before
 departure?
 
+### T-09 · Persist the data of the API
+- **Type**: task
+- **Status**: todo
+- **Opened**: 2026-10-20
+- **Effort**: M · **Owner**: Antoine · **Due**: —
+- **Origin**: branch feat/front-nuxt
+
+`fr.annway.web.AnnwayStore` keeps accounts, trips, reservations and sessions in memory: a
+restart brings back the demo data and nothing else. A database (PostgreSQL through podman, JDBC
+of the JDK) is a team decision ([NEW-DEPENDENCY]); then [SQL], [TRANSACTIONS] and [LOCKS] on
+seats and payments, and the export and anonymisation of [PERSONAL-DATA].
+
+### T-10 · A real payment provider
+- **Type**: task
+- **Status**: todo
+- **Opened**: 2026-10-20
+- **Effort**: M · **Owner**: Antoine · **Due**: —
+- **Origin**: branch feat/front-nuxt
+
+`fr.annway.web.DemoPaymentApi` accepts every payment without charging anything. Choose a
+provider as a team, implement `ExternalPaymentApi` with its key in `.<service>/` and the
+environment ([SECRETS]); with T-06 for refunds.
+
+### T-11 · Strict CSP by nonce for the front
+- **Type**: task
+- **Status**: todo
+- **Opened**: 2026-10-20
+- **Effort**: S · **Owner**: Antoine · **Due**: —
+- **Origin**: branch feat/front-nuxt
+
+The API sends its security headers (tested in `HttpEntryTest`), the Nuxt front does not yet:
+[CSP-NONCE] and [SECURITY-HEADERS] for the pages, through a Nitro plugin or `nuxt-security`
+(team decision for the second).
+
 ## 🟡 Normal
+
+### T-12 · Front tests and end-to-end journeys
+- **Type**: task
+- **Status**: blocked — waiting for the team's decision on Vitest and Playwright ([NEW-DEPENDENCY])
+- **Opened**: 2026-10-20
+- **Effort**: M · **Owner**: Antoine · **Due**: —
+- **Origin**: branch feat/front-nuxt
+
+[TEST-DENSITY], [E2E-JOURNEYS], [AUTOMATED-ACCESSIBILITY]: unit tests of `utils/` (cents,
+Paris time, criteria), a Playwright journey "book, pay, validate" against the full stack, an
+`axe-core` check of the main pages. The journey was played by hand on 2026-10-20.
+
+### T-13 · Profile verifications
+- **Type**: idea
+- **Status**: todo
+- **Opened**: 2026-10-20
+- **Effort**: M · **Owner**: — · **Due**: —
+- **Origin**: branch feat/front-nuxt
+
+`Profile` knows the email, phone and ID verifications, the front shows them, but nothing sets
+them (only the demo data). To decide as a team: link sent by email, code by SMS, ID checked by
+whom?
+
+### T-14 · `kiln dev` starts a Java API
+- **Type**: improvement
+- **Status**: todo
+- **Opened**: 2026-10-20
+- **Effort**: XS · **Owner**: Claude · **Due**: —
+- **Origin**: branch feat/front-nuxt
+
+kiln's Java stack has no dev command (it was a library or a CLI): `kiln dev` only starts the
+front, the API is started by hand (README). To report to kiln with the user's agreement
+([REPORT-TO-KILN]), not to patch here.
 
 ### T-07 · Property tests of the search filters
 - **Type**: task

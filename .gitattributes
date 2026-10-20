@@ -10,3 +10,4 @@
 *.npz binary
 
 # Generated files, exempt from [FILE-SIZE].
+frontend/pnpm-lock.yaml linguist-generated=true

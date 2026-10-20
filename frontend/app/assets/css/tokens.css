@@ -1,0 +1,118 @@
+/* [STYLE-3] Seule définition des jetons du thème : polices, couleurs, tailles, interlettrages,
+   arrondis, ombres, plans et largeurs. Même structure que le thème d'annski (noir et rouge),
+   ici en noir et bleu : annway le rejoindra comme deuxième plateforme. Un composant écrit la
+   classe du jeton (`bg-surface`, `text-accent-fg`, `rounded-card`), jamais une valeur
+   arbitraire qui le recopie. */
+
+@theme static {
+  --font-sans: 'Public Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+
+  /* Bleu annway, sous son propre nom : l'échelle `blue` de Tailwind garde son sens. */
+  --color-brand-50: #e8f0fe;
+  --color-brand-300: #93b8ff;
+  /* Texte bleu sur le noir : 7,9:1 (AA). */
+  --color-brand-400: #60a5fa;
+  --color-brand-500: #3b82f6;
+  /* Fond plein sous un texte blanc : 6,7:1 (AA) ; #3b82f6 n'y tient que 3,7:1. */
+  --color-brand-600: #1d4ed8;
+  --color-brand-800: #1e3a8a;
+  --color-brand-950: #0a0a0a;
+}
+
+:root {
+  --header-height: 72px;
+}
+
+/* Jetons de couleur sémantiques, ceux d'annski : un composant dit ce qu'il peint, jamais quelle
+   nuance. Sombre par défaut (noir annway) ; une nuance intermédiaire se dose au point d'appel
+   par l'opacité (`bg-fg/10`), pas par un nouveau jeton.
+   - surface : fond de page ; surface-raised : carte, champ ; surface-sunken : creux, en-tête ;
+   - fg : texte courant ; fg-muted : texte secondaire et libellé, AA sur les trois surfaces ;
+   - line : filet ; line-strong : contour d'un champ ;
+   - accent : fond bleu d'action ; accent-hover : son survol ; accent-fg : texte ou anneau de
+     focus bleu ; accent-soft : fond bleu pâle ; on-accent : texte posé sur `accent` ;
+   - success, warning, danger, info : état, et leur fond pâle `-soft`. */
+:root,
+[data-theme='dark'] {
+  --surface: var(--color-brand-950);
+  --surface-raised: rgb(255 255 255 / 0.05);
+  --surface-sunken: #000;
+  --text: #fff;
+  --text-muted: rgb(255 255 255 / 0.65);
+  --border: rgb(255 255 255 / 0.1);
+  --border-strong: rgb(255 255 255 / 0.3);
+  --accent: var(--color-brand-600);
+  --accent-hover: var(--color-brand-800);
+  --accent-fg: var(--color-brand-400);
+  --accent-soft: rgb(29 78 216 / 0.15);
+  --on-accent: #fff;
+  --success: #6ee7b7;
+  --success-soft: rgb(16 185 129 / 0.12);
+  --warning: #fbbf24;
+  --warning-soft: rgb(245 158 11 / 0.12);
+  --danger: #f87171;
+  --danger-soft: rgb(239 68 68 / 0.12);
+  --info: #7dd3fc;
+  --info-soft: rgb(14 165 233 / 0.12);
+  --overlay: #000;
+}
+
+/* `inline` : `bg-surface` suit le thème de l'ancêtre `[data-theme]` le plus proche. */
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-fg: var(--text);
+  --color-fg-muted: var(--text-muted);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-overlay: var(--overlay);
+}
+
+/* Rôles typographiques d'annski : une classe porte taille, interlettrage et graisse. */
+@theme {
+  --text-kicker: 0.625rem;
+  --text-kicker--letter-spacing: 0.3em;
+  --text-kicker--font-weight: 700;
+  --text-label: 0.75rem;
+  --text-label--line-height: calc(1 / 0.75);
+  --text-label--letter-spacing: 0.12em;
+  --text-label--font-weight: 600;
+  --text-caption: 0.8125rem;
+  --text-display-sm: clamp(1.75rem, 4vw, 2.5rem);
+  --text-display-md: clamp(2rem, 4vw, 3.5rem);
+  --text-display-lg: clamp(2.5rem, 6vw, 5rem);
+
+  --tracking-display: -0.02em;
+  --tracking-label: 0.08em;
+  --leading-display: 0.9;
+
+  --radius-control: 0.5rem;
+  --radius-card: 0.75rem;
+  --radius-panel: 1rem;
+
+  --shadow-accent: 0 14px 32px rgb(29 78 216 / 0.25);
+
+  --container-form: 28rem;
+  --container-page: 72rem;
+}
+
+:root {
+  --gutter-page: max(1rem, 5vw);
+  --z-header: 100;
+  --z-top: 300;
+}
