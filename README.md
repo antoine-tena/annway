@@ -82,6 +82,11 @@ plateforme. Pages : accueil, catalogue et recherche (`/trajets`), détail d'un t
 compte, réservations, alertes et demandes, demandes reçues par les conducteurs, profil d'un
 membre.
 
+Le serveur Nitro (`frontend/server/plugins/securityHeaders.ts`) envoie les en-têtes de sécurité
+sur chaque réponse hors `/api/`, et, sur le front construit (`pnpm build`), une
+Content-Security-Policy stricte : aucune origine tierce, un nonce par page sur les scripts que
+Nuxt écrit en ligne. `kiln dev` s'en passe, Vite injectant son code en ligne.
+
 ## Vérifier le code
 
 ```sh
