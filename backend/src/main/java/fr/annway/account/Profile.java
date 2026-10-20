@@ -1,5 +1,6 @@
 package fr.annway.account;
 
+import java.time.Clock;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -14,6 +15,8 @@ public final class Profile {
     private boolean isEmailVerified;
     private boolean isPhoneVerified;
     private boolean isIdentityDocumentVerified;
+    private VerificationCode pendingEmailCode;
+    private VerificationCode pendingPhoneCode;
 
     public String bio() {
         return bio;
@@ -39,6 +42,37 @@ public final class Profile {
         isPhoneVerified = true;
     }
 
+    /** Émet un nouveau code pour l'e-mail ; il remplace le précédent. */
+    public VerificationCode requestEmailCode(Clock clock) {
+        pendingEmailCode = VerificationCode.issue(clock);
+        return pendingEmailCode;
+    }
+
+    public void confirmEmail(String code, Clock clock) {
+        requireValid(pendingEmailCode, code, clock);
+        pendingEmailCode = null;
+        verifyEmail();
+    }
+
+    /** Émet un nouveau code pour le téléphone ; il remplace le précédent. */
+    public VerificationCode requestPhoneCode(Clock clock) {
+        pendingPhoneCode = VerificationCode.issue(clock);
+        return pendingPhoneCode;
+    }
+
+    public void confirmPhone(String code, Clock clock) {
+        requireValid(pendingPhoneCode, code, clock);
+        pendingPhoneCode = null;
+        verifyPhone();
+    }
+
+    private static void requireValid(VerificationCode pending, String code, Clock clock) {
+        if (pending == null || !pending.matches(code, clock)) {
+            throw new AccountException(AccountError.INVALID_VERIFICATION_CODE);
+        }
+    }
+
+    /** La pièce d'identité est contrôlée à la main par un organisateur de la sortie. */
     public void verifyIdentityDocument() {
         isIdentityDocumentVerified = true;
     }
