@@ -4,14 +4,15 @@ Covoiturage pour les sorties annski : proposer un trajet vers la station, réser
 
 ## Démarrage rapide
 
-Après le clone, depuis la racine du dépôt (prérequis : [uv](https://docs.astral.sh/uv/), un JDK 25 et `unzip`) :
+Après le clone, depuis la racine du dépôt (prérequis : [uv](https://docs.astral.sh/uv/), un JDK 25, `unzip` et [pnpm](https://pnpm.io/) avec Node 24) :
 
 ```sh
 uv tool install kiln-cli   # une fois par poste
 kiln install
+kiln dev
 ```
 
-Puis vérifier le backend : `cd backend && ./mvnw verify`.
+Puis ouvrir http://localhost:3000.
 
 ## Équipe
 
@@ -22,6 +23,7 @@ Puis vérifier le backend : `cd backend && ./mvnw verify`.
 ## Organisation
 
 - `backend/` : le backend Java 25 (Maven, sans framework).
+- `frontend/` : l'interface, en Nuxt 4 + Vue 3.
 - [`CLAUDE.md`](CLAUDE.md) et [`.claude/rules/kiln/`](.claude/rules/kiln/) : la charte du code
   et la façon de travailler, pour les humains comme pour les agents.
 - `.vscode/` : réglages et extensions recommandées, partagés par toute l'équipe.
@@ -32,15 +34,18 @@ paramètre (équipe, frameworks, podman…) : `kiln set <clé>=<valeur>`, sur un
 ## Installation
 
 Prérequis : ceux du démarrage rapide.
-`kiln install` installe les dépendances (backend) et active les garde-fous du
+`kiln install` installe les dépendances (backend, frontend) et active les garde-fous du
 commit (pre-commit, dont le refus de commiter sur `main` ou `develop`). On peut la relancer sans
 risque.
 
 ## Lancer le projet
 
 ```sh
-cd backend && ./mvnw -q package -DskipTests && java -jar target/annway-0.1.0.jar
+kiln dev
 ```
+
+- Backend Java : `cd backend && ./mvnw verify`.
+- Frontend : http://localhost:3000.
 
 ## Vérifier le code
 
@@ -48,7 +53,7 @@ cd backend && ./mvnw -q package -DskipTests && java -jar target/annway-0.1.0.jar
 kiln check
 ```
 
-`./mvnw verify` pour le backend Java (compilation stricte, JUnit, couverture), puis la charte (`charter`).
+`./mvnw verify` pour le backend Java (compilation stricte, JUnit, couverture), ESLint et le contrôle des types côté frontend, puis la charte (`charter`).
 
 ## Mettre à jour
 

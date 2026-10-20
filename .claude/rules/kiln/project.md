@@ -5,13 +5,15 @@ Project rules go in CLAUDE.md or in .claude/rules/ outside kiln/. -->
 Covoiturage pour les sorties annski : proposer un trajet vers la station, réserver une place.
 
 Size: **Flame**, an app in production, real users, several contributors (`kiln set size=…` changes it).
-Backend Java 25, Maven, no framework in `backend/`.
+Backend Java 25, Maven, no framework in `backend/`, frontend Nuxt 4 + Vue 3 in `frontend/`.
 The repo is generated and kept current by [kiln](https://github.com/antoine-tena/kiln).
 
 ## Commands
+- `kiln dev`: start the dev servers (front on http://localhost:3000).
 - `cd backend && ./mvnw verify`: compile (warnings are errors), run JUnit, check coverage.
-- `kiln check`: every check of the stack (Maven), then `charter`.
+- `kiln check`: every check of the stack (Maven, ESLint, type checks), then `charter`.
   Run it before saying a change is done.
+- A JavaScript dependency: `pnpm add <package>` in `frontend/` (`-D` for a tool); never npm.
 - `kiln update`: kiln's improvements and compatible dependency upgrades, on a branch, checks
   included; `kiln set key=value` changes a setting of the project (stack, team, podman…).
 
