@@ -2,11 +2,13 @@
 
 Covoiturage vers les stations de ski (partenaire annski.fr).
 
+## Utilisateurs / Compte
+
+Classes d'une autre partie, rappelées par leur nom : `Trajet`.
+
 ```mermaid
 classDiagram
     direction TB
-
-    %% ───────────── Utilisateurs / Compte ─────────────
     class Utilisateur {
         <<abstract>>
         -int id
@@ -74,7 +76,16 @@ classDiagram
     Message "*" --> "1" Utilisateur : expéditeur
     Message "*" --> "1" Trajet : annonce
 
-    %% ───────────── Trajets ─────────────
+    class Trajet
+```
+
+## Trajets
+
+Classes d'une autre partie, rappelées par leur nom : `Conducteur`, `Passager`, `Vehicule`.
+
+```mermaid
+classDiagram
+    direction TB
     class Trajet {
         <<abstract>>
         -int id
@@ -149,7 +160,18 @@ classDiagram
     Passager "1" --> "*" DemandeTrajet : crée
     DemandeTrajet "1" *-- "1" CritereRecherche
 
-    %% ───────────── Réservation ─────────────
+    class Conducteur
+    class Passager
+    class Vehicule
+```
+
+## Réservation
+
+Classes d'une autre partie, rappelées par leur nom : `Materiel`, `Passager`, `Trajet`.
+
+```mermaid
+classDiagram
+    direction TB
     class Reservation {
         -int id
         -int nbPlaces
@@ -191,7 +213,16 @@ classDiagram
     Reservation "1" o-- "0..1" Paiement
     Paiement --> TypePaiement
 
-    %% ───────────── Patron SIMPLE FACTORY : matériel ─────────────
+    class Materiel
+    class Passager
+    class Trajet
+```
+
+## Patron SIMPLE FACTORY : matériel
+
+```mermaid
+classDiagram
+    direction TB
     class Materiel {
         <<abstract>>
         -String description
@@ -221,8 +252,15 @@ classDiagram
     Materiel <|-- Luge
     MaterielFactory ..> Materiel : «crée»
     MaterielFactory ..> TypeMateriel
+```
 
-    %% ───────────── Patron OBSERVATEUR : alertes trajet ─────────────
+## Patron OBSERVATEUR : alertes trajet
+
+Classes d'une autre partie, rappelées par leur nom : `CritereRecherche`, `Passager`, `Trajet`.
+
+```mermaid
+classDiagram
+    direction TB
     class SujetTrajets {
         <<interface>>
         +abonner(ObservateurTrajet o) void
@@ -253,7 +291,18 @@ classDiagram
     AlerteTrajet "*" --> "1" Passager : prévient
     AlerteTrajet "1" *-- "1" CritereRecherche
 
-    %% ───────────── Patron STRATÉGIE : filtrage des résultats ─────────────
+    class CritereRecherche
+    class Passager
+    class Trajet
+```
+
+## Patron STRATÉGIE : filtrage des résultats
+
+Classes d'une autre partie, rappelées par leur nom : `CatalogueTrajets`.
+
+```mermaid
+classDiagram
+    direction TB
     class StrategieFiltre {
         <<interface>>
         +filtrer(List~Trajet~ trajets) List~Trajet~
@@ -276,7 +325,16 @@ classDiagram
     StrategieFiltre <|.. SansFiltre
     CatalogueTrajets --> StrategieFiltre : utilise
 
-    %% ───────────── Patron ADAPTATEUR : paiement (prix fixe ou don) ─────────────
+    class CatalogueTrajets
+```
+
+## Patron ADAPTATEUR : paiement (prix fixe ou don)
+
+Classes d'une autre partie, rappelées par leur nom : `Reservation`.
+
+```mermaid
+classDiagram
+    direction TB
     class ServicePaiement {
         <<interface>>
         +payer(Utilisateur payeur, double montant) boolean
@@ -292,6 +350,8 @@ classDiagram
     ServicePaiement <|.. AdaptateurPaiementExterne
     AdaptateurPaiementExterne --> ApiPaiementExterne : adapte
     Reservation ..> ServicePaiement : utilise
+
+    class Reservation
 ```
 
 ## Deux types de trajet
