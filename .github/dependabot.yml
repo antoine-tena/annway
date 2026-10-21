@@ -1,19 +1,25 @@
-# Veille des dépendances : une PR groupée par semaine. `kiln update` ne monte pas les versions
-# du pom.xml : Dependabot les propose ici.
 version: 2
 updates:
-  - package-ecosystem: github-actions
-    directory: /
-    schedule:
-      interval: weekly
-    groups:
-      actions:
-        patterns: ["*"]
-
   - package-ecosystem: maven
-    directory: /backend
+    directories:
+      - "/backend"
     schedule:
       interval: weekly
-    groups:
-      maven:
-        patterns: ["*"]
+    cooldown:
+      default-days: 7
+  - package-ecosystem: npm
+    directories:
+      - "/frontend"
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+  - package-ecosystem: github-actions
+    directories:
+      - "/"
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    ignore:
+      - dependency-name: "antoine-tena/kiln/*"

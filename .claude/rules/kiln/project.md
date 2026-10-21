@@ -10,6 +10,9 @@ The repo is generated and kept current by [kiln](https://github.com/antoine-tena
 
 ## Commands
 - `kiln dev`: start the dev servers (front on http://localhost:3000).
+  From a Claude session, `kiln dev` (in the background, nothing asked; never `--foreground`, it
+  would hold the session), then `kiln dev logs [service]` to read the servers, `kiln dev status`, `kiln dev stop`. A worker or
+  a background task goes in its folder's `Procfile.dev`, one `name: command` line.
 - `cd backend && ./mvnw verify`: compile (warnings are errors), run JUnit, check coverage.
 - `kiln check`: every check of the stack (Maven, ESLint, type checks), then `charter`.
   Run it before saying a change is done.
@@ -28,8 +31,8 @@ The repo is generated and kept current by [kiln](https://github.com/antoine-tena
 - The README describes the project as it is now: a change to a command, a setting, a route or a
   way of running the project updates it in the same branch, never "later".
 
-- `docs/backlog/` is the only up-to-date list of work: `backlog.md` (tickets `T-NN` by
-  priority, done ones in its "Done" log), `rejected.md` (what was turned down), `urgent.md`
+- `docs/backlog/` is the only up-to-date list of work: `backlog.md` (open tickets `T-NN` by
+  priority, how to write them in its `README.md`), `done.md` (closed ones), `rejected.md` (what was turned down), `urgent.md`
   (what only a human of the team can do). Skill `/kiln:backlog`.
 - `charter.toml`: the checked rules and their budgets; `kiln-waivers.toml`: deliberate
   deviations; `.copier-answers.yml`: the project's settings for kiln (changed by `kiln set`,
