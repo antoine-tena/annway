@@ -91,6 +91,11 @@ sur chaque réponse hors `/api/`, et, sur le front construit (`pnpm build`), une
 Content-Security-Policy stricte : aucune origine tierce, un nonce par page sur les scripts que
 Nuxt écrit en ligne. `kiln dev` s'en passe, Vite injectant son code en ligne.
 
+`kiln dev` laisse tout tourner en arrière-plan et propose de suivre les journaux ; ensuite
+`kiln dev status`, `kiln dev logs [service] -f`, `kiln dev stop` (`--foreground` : dans le
+terminal, jusqu'à Ctrl+C). Un processus de plus (un worker, une tâche de fond) se déclare dans le
+`Procfile.dev` de son dossier, une ligne `nom: commande`.
+
 ## Vérifier le code
 
 ```sh
@@ -118,7 +123,7 @@ Avec Claude Code, le skill `/kiln:update` fait tout : l'outil kiln, puis le dép
 ## Suivi du travail
 
 Ce qui reste à faire est dans [`docs/backlog/`](docs/backlog/) : `backlog.md` (les tickets, par
-priorité), `rejected.md` (ce qui a été refusé) et `urgent.md` (ce que seul un humain peut faire).
+priorité), `done.md` (ceux qui sont faits), `rejected.md` (ce qui a été refusé) et `urgent.md` (ce que seul un humain peut faire).
 
 ## Contribuer
 

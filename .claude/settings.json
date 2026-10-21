@@ -6,6 +6,7 @@
     "KILN_FRONTEND_DIR": "frontend",
     "KILN_TEST_ENV": ""
   },
+  "autoCompactWindow": 400000,
   "extraKnownMarketplaces": {
     "kiln": {
       "source": {
