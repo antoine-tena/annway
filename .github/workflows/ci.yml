@@ -1,7 +1,7 @@
 name: CI
 
 # The reusable workflows live in kiln (antoine-tena/kiln, public), cited at the kiln release the
-# project comes from (v0.4.2-rc.1): `kiln update` moves them to the next one. The project only
+# project comes from (v0.4.3-rc.1): `kiln update` moves them to the next one. The project only
 # keeps its parameters here.
 on:
   # The CI of each push runs on the machine (`kiln ci`, verdict kept as a git note): no GitHub
@@ -13,12 +13,12 @@ on:
 
 jobs:
   backend:
-    uses: antoine-tena/kiln/.github/workflows/maven.yml@v0.4.2-rc.1
+    uses: antoine-tena/kiln/.github/workflows/maven.yml@v0.4.3-rc.1
     with:
       directory: backend
 
   frontend:
-    uses: antoine-tena/kiln/.github/workflows/pnpm.yml@v0.4.2-rc.1
+    uses: antoine-tena/kiln/.github/workflows/pnpm.yml@v0.4.3-rc.1
     with:
       scripts: |
         lint
@@ -27,14 +27,14 @@ jobs:
         build
 
   charter:
-    uses: antoine-tena/kiln/.github/workflows/charter.yml@v0.4.2-rc.1
+    uses: antoine-tena/kiln/.github/workflows/charter.yml@v0.4.3-rc.1
 
   # [SECRETS]: gitleaks searches the whole history, with no organisation licence.
   secrets-scan:
-    uses: antoine-tena/kiln/.github/workflows/secrets.yml@v0.4.2-rc.1
+    uses: antoine-tena/kiln/.github/workflows/secrets.yml@v0.4.3-rc.1
 
   security:
-    uses: antoine-tena/kiln/.github/workflows/security.yml@v0.4.2-rc.1
+    uses: antoine-tena/kiln/.github/workflows/security.yml@v0.4.3-rc.1
     with:
       uv: ""
       pnpm: "frontend"
