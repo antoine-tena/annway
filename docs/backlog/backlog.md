@@ -12,15 +12,6 @@ North star: **annway en service**.
 
 ## 🔴 Critical
 
-### T-15 · Finish the kiln update to v0.4.4
-- **Type**: task
-- **Status**: todo
-- **Opened**: 2026-10-21
-- **Effort**: XS · **Owner**: — · **Due**: —
-- **Origin**: release notes of the kiln releases crossed (`kiln update`)
-
-What kiln cannot guess, to fill in right after the update (`/kiln:update`):
-- [ ] in a Django project under podman, copy the DATABASE_URL line of backend/.env.example into backend/.env to develop on the compose's PostgreSQL. (v0.4.4)
 
 ## 🟠 Important
 
