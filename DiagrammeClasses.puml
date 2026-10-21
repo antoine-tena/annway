@@ -1,0 +1,278 @@
+' AnnWay – Diagramme de classes, version PlantUML de DiagrammeClasses.md.
+@startuml AnnWay
+top to bottom direction
+skinparam classAttributeIconSize 0
+
+package "Utilisateurs / Compte" {
+  abstract class Utilisateur {
+    - id : int
+    - nom : String
+    - prenom : String
+    - email : String
+    - telephone : String
+    + gererProfil() : void
+    + laisserAvis(cible : Utilisateur, note : int, commentaire : String) : Avis
+    + envoyerMessage(annonce : Trajet, contenu : String) : Message
+    + getNoteMoyenne() : double
+  }
+  class Passager {
+    + rechercherTrajet(criteres : CritereRecherche) : List<Trajet>
+    + reserver(trajet : Trajet, nbPlaces : int, materiels : List<Materiel>) : Reservation
+    + creerDemandeTrajet(criteres : CritereRecherche) : DemandeTrajet
+    + abonnerAlerte(criteres : CritereRecherche) : AlerteTrajet
+  }
+  class Conducteur {
+    + publierTrajet(trajet : Trajet) : void
+    + validerReservation(r : Reservation) : void
+    + refuserReservation(r : Reservation) : void
+  }
+  class Profil {
+    - bio : String
+    - photo : String
+    - emailVerifie : boolean
+    - telephoneVerifie : boolean
+    - pieceIdVerifiee : boolean
+    + verifierEmail() : void
+    + verifierTelephone() : void
+    + verifierPieceId() : void
+    + estVerifie() : boolean
+  }
+  class Vehicule {
+    - immatriculation : String
+    - modele : String
+    - placesAssises : int
+    - capaciteMateriel : int
+  }
+  class Avis {
+    - note : int
+    - commentaire : String
+    - reponse : String
+    - date : LocalDate
+    + repondre(reponse : String) : void
+  }
+  class Message {
+    - contenu : String
+    - dateEnvoi : LocalDateTime
+  }
+}
+
+package "Trajets" {
+  abstract class Trajet {
+    - id : int
+    - depart : String
+    - arrivee : String
+    - dateDepart : LocalDateTime
+    - placesDisponibles : int
+    - capaciteMaterielRestante : int
+    - statut : StatutTrajet
+    + ajouterEtape(etape : Etape) : void
+    + aAssezDePlace(nbPlaces : int, materiels : List<Materiel>) : boolean
+    + correspond(criteres : CritereRecherche) : boolean
+    + {abstract} getType() : TypeTrajet
+    + {abstract} paiementObligatoire() : boolean
+    + {abstract} calculerMontantDu(nbPlaces : int) : double
+  }
+  class TrajetStation {
+    - prixParPlace : double
+    + getType() : TypeTrajet
+    + paiementObligatoire() : boolean
+    + calculerMontantDu(nbPlaces : int) : double
+  }
+  class TrajetPolytech {
+    - heureDepartBus : LocalDateTime
+    - stationDesservie : String
+    + getType() : TypeTrajet
+    + paiementObligatoire() : boolean
+    + calculerMontantDu(nbPlaces : int) : double
+  }
+  enum TypeTrajet {
+    STATION
+    POLYTECH
+  }
+  class Etape {
+    - lieu : String
+    - heurePassage : LocalDateTime
+  }
+  enum StatutTrajet {
+    OUVERT
+    COMPLET
+    TERMINE
+    ANNULE
+  }
+  class CritereRecherche {
+    - depart : String
+    - arrivee : String
+    - date : LocalDate
+    - nbPassagers : int
+    - type : TypeTrajet
+  }
+  class DemandeTrajet {
+    - dateCreation : LocalDate
+  }
+}
+
+package "Réservation" {
+  class Reservation {
+    - id : int
+    - nbPlaces : int
+    - statut : StatutReservation
+    - dateReservation : LocalDateTime
+    + valider() : void
+    + refuser() : void
+    + annuler() : void
+    + getEncombrementTotal() : int
+    + payer(montant : double, service : ServicePaiement) : Paiement
+    + estPayee() : boolean
+  }
+  enum StatutReservation {
+    EN_ATTENTE
+    VALIDEE
+    REFUSEE
+    ANNULEE
+  }
+  class Paiement {
+    - montant : double
+    - date : LocalDateTime
+    - type : TypePaiement
+    - effectue : boolean
+  }
+  enum TypePaiement {
+    PRIX_FIXE
+    DON
+  }
+}
+
+package "Patron SIMPLE FACTORY : matériel" {
+  abstract class Materiel {
+    - description : String
+    + {abstract} getEncombrement() : int
+  }
+  class Ski {
+    + getEncombrement() : int
+  }
+  class Snowboard {
+    + getEncombrement() : int
+  }
+  class Luge {
+    + getEncombrement() : int
+  }
+  enum TypeMateriel {
+    SKI
+    SNOWBOARD
+    LUGE
+  }
+  class MaterielFactory {
+    + {static} creerMateriel(type : TypeMateriel, description : String) : Materiel
+  }
+}
+
+package "Patron OBSERVATEUR : alertes trajet" {
+  interface SujetTrajets {
+    + abonner(o : ObservateurTrajet) : void
+    + desabonner(o : ObservateurTrajet) : void
+    + notifier(trajet : Trajet) : void
+  }
+  interface ObservateurTrajet {
+    + actualiser(trajet : Trajet) : void
+  }
+  class CatalogueTrajets {
+    - trajets : List<Trajet>
+    - observateurs : List<ObservateurTrajet>
+    - strategie : StrategieFiltre
+    + ajouterTrajet(trajet : Trajet) : void
+    + rechercher(criteres : CritereRecherche) : List<Trajet>
+    + setStrategie(s : StrategieFiltre) : void
+  }
+  class AlerteTrajet {
+    - active : boolean
+    + actualiser(trajet : Trajet) : void
+  }
+}
+
+package "Patron STRATÉGIE : filtrage des résultats" {
+  interface StrategieFiltre {
+    + filtrer(trajets : List<Trajet>) : List<Trajet>
+  }
+  class FiltreParPrix {
+    - prixMax : double
+    + filtrer(trajets : List<Trajet>) : List<Trajet>
+  }
+  class FiltreParHoraire {
+    - heureMin : LocalTime
+    - heureMax : LocalTime
+    + filtrer(trajets : List<Trajet>) : List<Trajet>
+  }
+  class SansFiltre {
+    + filtrer(trajets : List<Trajet>) : List<Trajet>
+  }
+}
+
+package "Patron ADAPTATEUR : paiement (prix fixe ou don)" {
+  interface ServicePaiement {
+    + payer(payeur : Utilisateur, montant : double) : boolean
+  }
+  class AdaptateurPaiementExterne {
+    - api : ApiPaiementExterne
+    + payer(payeur : Utilisateur, montant : double) : boolean
+  }
+  class ApiPaiementExterne {
+    + sendPayment(email : String, amountCents : int) : String
+  }
+}
+
+' Utilisateurs / Compte
+Utilisateur <|-- Passager
+Utilisateur <|-- Conducteur
+Utilisateur "1" *-- "1" Profil
+Conducteur "1" o-- "1..*" Vehicule : possède
+Avis "*" --> "1" Utilisateur : auteur
+Avis "*" --> "1" Utilisateur : cible
+Message "*" --> "1" Utilisateur : expéditeur
+Message "*" --> "1" Trajet : annonce
+
+' Trajets
+Conducteur "1" --> "*" Trajet : publie
+Trajet "*" --> "1" Vehicule
+Trajet "1" *-- "1..*" Etape
+Trajet --> StatutTrajet
+Trajet <|-- TrajetStation
+Trajet <|-- TrajetPolytech
+Trajet ..> TypeTrajet
+CritereRecherche --> TypeTrajet
+Passager "1" --> "*" DemandeTrajet : crée
+DemandeTrajet "1" *-- "1" CritereRecherche
+
+' Réservation
+Passager "1" --> "*" Reservation : effectue
+Reservation "*" --> "1" Trajet
+Reservation --> StatutReservation
+Reservation "1" o-- "0..*" Materiel : déclare
+Reservation "1" o-- "0..1" Paiement
+Paiement --> TypePaiement
+
+' Simple Factory
+Materiel <|-- Ski
+Materiel <|-- Snowboard
+Materiel <|-- Luge
+MaterielFactory ..> Materiel : «crée»
+MaterielFactory ..> TypeMateriel
+
+' Observateur
+SujetTrajets <|.. CatalogueTrajets
+ObservateurTrajet <|.. AlerteTrajet
+CatalogueTrajets "1" o-- "*" ObservateurTrajet : notifie
+CatalogueTrajets "1" o-- "*" Trajet
+AlerteTrajet "*" --> "1" Passager : prévient
+AlerteTrajet "1" *-- "1" CritereRecherche
+
+' Stratégie
+StrategieFiltre <|.. FiltreParPrix
+StrategieFiltre <|.. FiltreParHoraire
+StrategieFiltre <|.. SansFiltre
+CatalogueTrajets --> StrategieFiltre : utilise
+
+' Adaptateur
+ServicePaiement <|.. AdaptateurPaiementExterne
+AdaptateurPaiementExterne --> ApiPaiementExterne : adapte
+Reservation ..> ServicePaiement : utilise
+@enduml
