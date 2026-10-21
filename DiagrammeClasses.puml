@@ -4,7 +4,7 @@ top to bottom direction
 skinparam classAttributeIconSize 0
 
 package "Utilisateurs / Compte" {
-  abstract class Utilisateur {
+  abstract class Utilisateur <<abstract>> {
     - id : int
     - nom : String
     - prenom : String
@@ -57,7 +57,7 @@ package "Utilisateurs / Compte" {
 }
 
 package "Trajets" {
-  abstract class Trajet {
+  abstract class Trajet <<abstract>> {
     - id : int
     - depart : String
     - arrivee : String
@@ -85,7 +85,7 @@ package "Trajets" {
     + paiementObligatoire() : boolean
     + calculerMontantDu(nbPlaces : int) : double
   }
-  enum TypeTrajet {
+  enum TypeTrajet <<enumeration>> {
     STATION
     POLYTECH
   }
@@ -93,7 +93,7 @@ package "Trajets" {
     - lieu : String
     - heurePassage : LocalDateTime
   }
-  enum StatutTrajet {
+  enum StatutTrajet <<enumeration>> {
     OUVERT
     COMPLET
     TERMINE
@@ -124,7 +124,7 @@ package "Réservation" {
     + payer(montant : double, service : ServicePaiement) : Paiement
     + estPayee() : boolean
   }
-  enum StatutReservation {
+  enum StatutReservation <<enumeration>> {
     EN_ATTENTE
     VALIDEE
     REFUSEE
@@ -136,14 +136,14 @@ package "Réservation" {
     - type : TypePaiement
     - effectue : boolean
   }
-  enum TypePaiement {
+  enum TypePaiement <<enumeration>> {
     PRIX_FIXE
     DON
   }
 }
 
 package "Patron SIMPLE FACTORY : matériel" {
-  abstract class Materiel {
+  abstract class Materiel <<abstract>> {
     - description : String
     + {abstract} getEncombrement() : int
   }
@@ -156,7 +156,7 @@ package "Patron SIMPLE FACTORY : matériel" {
   class Luge {
     + getEncombrement() : int
   }
-  enum TypeMateriel {
+  enum TypeMateriel <<enumeration>> {
     SKI
     SNOWBOARD
     LUGE
@@ -167,12 +167,12 @@ package "Patron SIMPLE FACTORY : matériel" {
 }
 
 package "Patron OBSERVATEUR : alertes trajet" {
-  interface SujetTrajets {
+  interface SujetTrajets <<interface>> {
     + abonner(o : ObservateurTrajet) : void
     + desabonner(o : ObservateurTrajet) : void
     + notifier(trajet : Trajet) : void
   }
-  interface ObservateurTrajet {
+  interface ObservateurTrajet <<interface>> {
     + actualiser(trajet : Trajet) : void
   }
   class CatalogueTrajets {
@@ -190,7 +190,7 @@ package "Patron OBSERVATEUR : alertes trajet" {
 }
 
 package "Patron STRATÉGIE : filtrage des résultats" {
-  interface StrategieFiltre {
+  interface StrategieFiltre <<interface>> {
     + filtrer(trajets : List<Trajet>) : List<Trajet>
   }
   class FiltreParPrix {
@@ -208,7 +208,7 @@ package "Patron STRATÉGIE : filtrage des résultats" {
 }
 
 package "Patron ADAPTATEUR : paiement (prix fixe ou don)" {
-  interface ServicePaiement {
+  interface ServicePaiement <<interface>> {
     + payer(payeur : Utilisateur, montant : double) : boolean
   }
   class AdaptateurPaiementExterne {
