@@ -8,7 +8,7 @@ on:
   # minutes. On GitHub, by hand: Actions, CI, Run workflow. Back on each push:
   # `kiln set ci_runner=github`.
   workflow_dispatch:
-  # Replayed by deploy.yml before any production release.
+  # Callable from another workflow of the repo.
   workflow_call:
 
 # [WORKFLOW-PERMISSIONS]: the token reads the repo, nothing more; kiln's workflows need no more.
