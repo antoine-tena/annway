@@ -1,5 +1,5 @@
 # kiln's answers for this project: never edit by hand, `kiln set` changes them.
-_commit: v0.4.9-182-g1006f0c
+_commit: v0.4.9-273-gbd44979
 _src_path: https://github.com/antoine-tena/kiln.git
 backend: java
 ci_runner: local
@@ -19,7 +19,7 @@ podman: false
 prod_health_url: ''
 project_type: api
 serena: false
-size: flame
+size: medium
 statusline_ci: true
 team:
 - antoine-tena
