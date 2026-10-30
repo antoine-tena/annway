@@ -4,7 +4,7 @@ Project rules go in CLAUDE.md or in .claude/rules/ outside kiln/. -->
 
 Covoiturage pour les sorties annski : proposer un trajet vers la station, réserver une place.
 
-Size: **Flame**, an app in production, real users, several contributors (`kiln set size=…` changes it).
+Size: **Medium**, an app in production, real users, several contributors (`kiln set size=…` changes it).
 Backend Java 25, Maven, no framework in `backend/`, frontend Nuxt 4 + Vue 3 in `frontend/`.
 The repo is generated and kept current by [kiln](https://github.com/antoine-tena/kiln).
 
@@ -34,6 +34,9 @@ The repo is generated and kept current by [kiln](https://github.com/antoine-tena
 - `docs/backlog/` is the only up-to-date list of work: `backlog.md` (open tickets `T-NN` by
   priority, how to write them in its `README.md`), `done.md` (closed ones), `rejected.md` (what was turned down), `urgent.md`
   (what only a human of the team can do). Skill `/kiln:backlog`.
+- `.claude/`: committed, `settings.json`, `skills/` (the project's own skills), `rules/`,
+  `hooks/` (the scripts of its own hooks) and `plans/` (plan mode's plans); local, ignored by
+  git, `settings.local.json`, `worktrees/`, `memory/` and `sessions/`.
 - `charter.toml`: the checked rules and their budgets; `kiln-waivers.toml`: deliberate
   deviations; `.copier-answers.yml`: the project's settings for kiln (changed by `kiln set`,
   never by hand).
