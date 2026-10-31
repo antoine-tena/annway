@@ -1,56 +1,20 @@
 # annway
 
-Covoiturage pour les sorties annski : proposer un trajet vers la station, réserver une place.
-
-<!-- This file belongs to the project: kiln wrote it once and never changes it. kiln's rules live
-in .claude/rules/kiln/ and are kept current by `kiln update`. Write here what Claude cannot
-guess about this project, and keep it under 200 lines: every session reads it. -->
+Carpooling for annski outings: offer a trip to the station, book a seat.
 
 ## Repo map
 
-Where to look, so as not to explore: read it before opening files, and update it in the commit
-that adds, moves or removes a directory, a domain or an entry point. One line per place, what
-it holds; no copy of the code.
-
-- `backend/src/main/java/fr/annway/`: entry point (`Main.java`), one
-  package per domain; `web/`: the HTTP API (`WebMain`, routes per domain, sessions, demo data);
-  `backend/src/test/java/`: JUnit tests; `backend/pom.xml`: Maven build.
-- `frontend/app/`: Nuxt front; `pages/` (one per screen), `components/` (`ui/`, `header/`,
-  `trip/`, `account/`, `auth/`, `reservation/`), `composables/` (one per API domain),
-  `assets/css/tokens.css` (annski's theme in blue); `frontend/server/`: Nitro plugin of the
-  security headers and the CSP by nonce.
-- `docs/backlog/`: the work to do; `charter.toml`: the checked rules; `.claude/rules/kiln/`:
-  kiln's rules for Claude.
+- `backend/src/main/java/fr/annway/`: `Main.java`, one package per domain; `web/`: HTTP API (`WebMain`, routes per domain, sessions, demo data); `backend/src/test/java/`: JUnit; `backend/pom.xml`.
+- `frontend/app/`: `pages/`, `components/` (`ui/`, `header/`, `trip/`, `account/`, `auth/`, `reservation/`), `composables/` (one per API domain), `assets/css/tokens.css` (annski theme in blue); `frontend/server/`: Nitro plugin (security headers, nonce CSP).
+- `REPARTITION.md`: class ownership. `.github/workflows/`: `ci.yml` (kiln reusable workflows, gitleaks), `deploy.yml`.
+- `docs/backlog/`; `charter.toml`; `.claude/rules/kiln/`.
 
 ## Notes
 
-<!-- Decisions, conventions and pitfalls of this project that Claude cannot guess from the code:
-"we never call X directly, always through Y", "the staging database is reset every night"… -->
-
-## Carried over from the instructions of kiln 0.3
-
-### From `CLAUDE.md`
-
-## Propre à annway
-
-- Ce dépôt est **indépendant** d'annski : il ne dépend d'aucun de ses fichiers et ne suppose pas
-  qu'annski est présent sur la machine.
-- Le backend est **en Java** (Java 25 LTS), sans framework ; le front est en Nuxt (TypeScript),
-  comme celui d'annski, qu'annway rejoindra un jour comme deuxième plateforme : il en reprend
-  les jetons, l'en-tête et la connexion, en noir et bleu. Toute autre bibliothèque ou tout
-  autre outil se décide en équipe ([NEW-DEPENDENCY]).
-- Déploiement : `.github/workflows/deploy.yml`, lancé à la main depuis `main`, qui rejoue la CI
-  avant toute mise en production.
-- **[PERMISSIONS]** Chaque route déclare son authentification ; une route publique le dit et le
-  justifie, et elle est limitée en débit.
-- **[PROPRIETAIRE-CLASSE]** Chaque classe appartient à un seul membre de l'équipe, selon
-  [`REPARTITION.md`](REPARTITION.md) : personne, humain ou agent, ne crée, ne modifie ni ne
-  supprime une classe d'un autre module (revue).
-- **[PERMISSION-TESTS]** Toute route protégée a un test qui vérifie le refus (401, 403).
-- **[ACCESSIBILITY]** Chaque champ a un `<label>`, chaque bouton-icône un `aria-label`, chaque
-  image informative un `alt` ; tout est utilisable au clavier.
-
-- `REPARTITION.md` : quel membre de l'équipe possède quelles classes.
-
-- `.github/workflows/` : CI (`ci.yml`, workflows réutilisables de kiln et scan gitleaks) et
-  déploiement manuel (`deploy.yml`).
+- Independent of annski: depends on none of its files, doesn't assume it's on the machine.
+- Backend Java 25 LTS, no framework; front Nuxt/TS, reuses annski's tokens, header, login in black and blue (will join annski as second platform). Any other library or tool is a team decision ([NEW-DEPENDENCY]).
+- Deploy: `deploy.yml`, manual from `main`, replays CI first.
+- **[PERMISSIONS]** Each route declares auth; public route says so, justifies it, is rate-limited.
+- **[PROPRIETAIRE-CLASSE]** Each class has one team owner (`REPARTITION.md`): nobody, human or agent, creates, edits or deletes another module's class (review).
+- **[PERMISSION-TESTS]** Protected route has a refusal test (401, 403).
+- **[ACCESSIBILITY]** Field `<label>`, icon button `aria-label`, informative image `alt`; keyboard usable.
